@@ -13,6 +13,7 @@
     padding-block: 0.2rem;
 
     text-align: center;
+    z-index: 1;
 }
 
 #search-bar {
@@ -32,6 +33,7 @@
 }
 
 .pony-card {
+    left: 0px;
     background-color: white;
 
     width: var(--grid-size, 10rem);
