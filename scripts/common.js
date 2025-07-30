@@ -136,3 +136,20 @@ export function getUrlParameter(param) {
     console.log(value)
   return value == null ? null : decodeURIComponent(value)
 }
+
+export function createElement(tagName, attrs = {}, children = []) {
+  let element = document.createElement(tagName)
+  for (let [attr, value] of Object.entries(attrs)) {
+    if (attr == 'text') {
+      element.innerText = value
+    } else {
+      element.setAttribute(attr, value)
+    }
+  }
+
+  for (let child of children) {
+    element.appendChild(child)
+  }
+
+  return element
+}

@@ -12,13 +12,21 @@ window.LOC = new Localization('/assets/json/localization.json')
 window.gameData = new GameData('/assets/json/game-data.json')
 
 document.addEventListener('click', (e) => {
-    if (e.target.tagName == 'A') {
-        const url = new URL(e.target.href)
+    // e.preventDefault()
+    console.log('target', e.target)
+    const link = e.target.closest('a')
+    console.log('link', link)
+    if (link?.tagName == 'A') {
+        const url = new URL(link.href)
+        console.log(location)
+        console.log(url)
         if (url.origin == location.origin) {
             e.preventDefault()
-            setURL(e.target.href)
-            console.log('same page', e.target.href)
+            setURL(link.href)
+            console.log('same page', link.href)
             window.app.refreshPage()
+        } else {
+            console.log('not same domain')
         }
     }
 })
@@ -101,12 +109,28 @@ class App {
         let url = new URL(location)
 
         let path = url.pathname
-        if (path[path.length - 1] != '/') {
-            url.pathname += '/'
-            path = url.pathname
 
-            setURL(url.toString(), true)
+        let pathParts = path.split('/')
+
+        if (pathParts[0] == '') {
+            pathParts.splice(0, 1)
         }
+        if (pathParts[pathParts.length - 1] == '') {
+            pathParts.splice(pathParts.length - 1, 1)
+        }
+
+        if (pathParts.length) {
+            if (pathParts[pathParts.length - 1].includes('.')) {
+                url.pathname = '/' + pathParts.join('/')
+                setURL(url, true)
+                path = '/' + pathParts.slice(0, pathParts.length - 1).join('/') + '/'
+            } else {
+                path = `/${pathParts.join('/')}/`
+                url.pathname = path
+                setURL(url, true)
+            }
+        }
+
 
         this.sidebarToggle.checked = false
 

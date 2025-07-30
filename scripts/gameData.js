@@ -128,9 +128,17 @@ export default class GameData {
     }
 
     updatePonies() {
+        for (let category of Object.values(this.categories)) {
+            for (let [id, item] of Object.entries(category.items)) {
+                item.id = id
+            }
+        }
+        
+        
         this.ponies = {}
 
         for (let [ponyId, ponyInfo] of Object.entries(this.gameData.categories.ponies.items)) {
+            
             let searchNames = [
                 this.transformName(
                     fixName(ponyInfo.name[this.language])
@@ -200,18 +208,32 @@ export default class GameData {
         return null
     }
 
-    searchName(name) {
+    searchName(name, category = 'ponies') {
+        if (!(category in this.categories)) {
+            throw RangeError(`Category ${category} does not exist`)
+        }
+        
+        const items = this.categories[category].items
+
         name = this.transformName(name)
         if (name == '') {
-            return Object.keys(this.ponies)
+            return Object.keys(items)
         }
         let result = []
-        for (let pony of Object.values(this.ponies)) {
-            if (pony.search_names.some((searchName) => searchName.includes(name))) {
-                result.push(pony.id)
+
+        function addResult(id) {
+            if (!result.includes(id)) {
+                result.push(id)
             }
-            if (this.transformName(pony.id).includes(name)) {
-                result.push(pony.id)
+        }
+
+        for (let item of Object.values(items)) {
+            if (this.transformName(fixName(item.name[this.language])).includes(name)) {
+                addResult(item.id)
+            } else if (item.alt_name[this.language] && item.alt_name[this.language].some((searchName) => this.transformName(fixName(searchName)).includes(name))) {
+                addResult(item.id)
+            } else if (this.transformName(item.id).includes(name)) {
+                addResult(item.id)
             }
         }
         return result

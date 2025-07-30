@@ -1,6 +1,8 @@
-import { getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
+import { createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
 import Page from "../scripts/page.js"
 import '../scripts/jquery-3.7.1.min.js'
+
+import { ponyCard } from "/scripts/components/item-card.js";
 
 export default class Ponies extends Page {
     async load() {
@@ -33,11 +35,11 @@ export default class Ponies extends Page {
 
         this.searchBar.on('input', () => this.updateSearch())
 
+        console.log('loading')
         this.reload()
     }
 
-    reload() {
-        console.log('reloading')
+    async reload() {
         let selectedPony = getUrlParameter('pony')
         
         if (selectedPony) {
@@ -52,9 +54,9 @@ export default class Ponies extends Page {
             this.searchBar.val(searchQuery)
         }
 
-        if (!this.searchCreated) {
+        // if (!this.searchCreated) {
             this.createSearchCards()
-        }
+        // }
 
         if (this.currentScreen == 'search') {
             this.updateSearch()
@@ -70,7 +72,7 @@ export default class Ponies extends Page {
         }
 
         if (reload) {
-            this.createSearchCards()
+            await this.createSearchCards()
         }
         
         if (screen == 'search') {
@@ -85,31 +87,7 @@ export default class Ponies extends Page {
 
     createPonyCard(ponyId) {
         let pony = gameData.getPony(ponyId)
-        let card = $('<a>', {
-            class: 'pony-card',
-            id: ponyId,
-            href: `?pony=${ponyId}`,
-        }).append(
-            $('<div>', {
-                class: 'pony-name',
-                text: pony.name[this.language],
-            }),
-            $('<div>', {
-                class: 'pony-card-body',
-            }).append(
-                $('<img>', {
-                    class: 'pony-image',
-                    src: pony.image.full,
-                    loading: 'lazy',
-                    alt: pony.name[this.language],
-                })
-            )
-        ).on('click', (e) => {
-            e.preventDefault()
-            setUrlParameter('pony', ponyId)
-            this.showPonyProfile(pony.id)
-        })
-        return card
+        return ponyCard(pony)
     }
 
     showSearch() {
@@ -118,21 +96,24 @@ export default class Ponies extends Page {
         this.ponyProfileSection.css('display', 'none')
     }
 
-    createSearchCards() {
+    async createSearchCards() {
         // this.searchResultsElement.empty()
+        console.log('creating search cards')
+
+        let elements = []
         
         for (let ponyId of Object.keys(gameData.ponies)) {
             let ponyCard = document.getElementById(ponyId)
             if (ponyCard == null) {
-                this.searchResultsElement.append(this.createPonyCard(ponyId))
+                elements.push(this.createPonyCard(ponyId))
             } else {
                 let pony = gameData.getPony(ponyId)
-                ponyCard.querySelector('.pony-name').innerText = pony.name[this.language]
+                ponyCard.setAttribute('name', pony.name[this.language])
+                elements.push(ponyCard)
             }
         }
 
-        let children = Array.from(this.searchResultsElement[0].children)
-        this.searchResultsElement[0].replaceChildren(...children.sort(this.sortResults))
+        this.searchResultsElement[0].replaceChildren(...elements.sort(this.sortResults))
 
         this.searchCreated = true
     }
@@ -143,25 +124,30 @@ export default class Ponies extends Page {
         return pony1.index - pony2.index
     }
 
-    updateSearch() {
+    async updateSearch() {
         this.showSearch()
 
         setUrlParameter('q', this.searchBar.val(), true)
 
 
-        let searchResults = gameData.searchName(this.searchBar.val(), true)
+        let searchResults = gameData.searchName(this.searchBar.val(), 'ponies')
         // console.log(searchResults)
 
         this.searchResultsElement.children().each(function () {
             if (!searchResults.includes(this.id)) {
                 this.style.display = 'none'
+                // this.classList.add('hide')
             } else {
                 this.style.display = 'block'
+
+                // this.classList.remove('hide')
             }
         })
     }
 
-    showPonyProfile(ponyId) {
+    async showPonyProfile(ponyId) {
+        $('.to-search').attr('href', `?q=${encodeURI(this.searchBar.val())}`)
+        
         this.currentScreen = 'ponyProfile'
 
         this.searchSection.css('display', 'none')
