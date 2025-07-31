@@ -298,7 +298,10 @@ class GetGameData:
 
         self.categories = self.game_data.setdefault('categories', {})
 
+        self.houses = []
+
         self.get_ponies()
+        self.get_houses()
 
         console.print('saving game data')
         with open(self.output_game_data, 'w', encoding = 'utf-8') as file:
@@ -338,6 +341,19 @@ class GetGameData:
         self.content_version = parse_xml(self.get_game_file('data_ver.xml', 'rb'))[0].attrib['Value']
         return self.content_version
 
+    def save_image(self, input_path: str, output_path: str):
+        image = None
+        if os.path.exists(input_path + '.png'):
+            image = Image.open(input_path + '.png')
+        elif os.path.exists(input_path + '.pvr'):
+            image = PVR(input_path + '.pvr', external_alpha = True).image
+        else:
+            console.print(f'could not find {os.path.basename(output_path)} image')
+    
+        if image is not None:
+            image = crop_image(image)
+            image.save(output_path)
+
     def get_ponies(self):
         self.categories.setdefault('ponies', {})
 
@@ -356,6 +372,10 @@ class GetGameData:
             pony_id = hidden_pony.get('Parent', {}).get('PonyName')
             if pony_id and pony_id not in NPC_PONIES:
                 NPC_PONIES.append(pony_id)
+        
+
+        os.makedirs(os.path.join(self.images_folder, 'ponies', 'portrait'), exist_ok = True)
+        os.makedirs(os.path.join(self.images_folder, 'ponies', 'full'), exist_ok = True)
         
         groups = {}
 
@@ -431,9 +451,6 @@ class GetGameData:
 
                 images = pony_info.setdefault('image', {})
 
-                os.makedirs(os.path.join(self.images_folder, 'ponies', 'portrait'), exist_ok = True)
-                os.makedirs(os.path.join(self.images_folder, 'ponies', 'full'), exist_ok = True)
-
                 portrait_image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'ponies', 'portrait', f'{pony.id}.png')))
                 images['portrait'] = '/' + portrait_image_path
 
@@ -481,8 +498,9 @@ class GetGameData:
                     'UNKNOWN',
                 )
                 pony_info['house'] = pony.get('House', {}).get('Type')
+                self.houses.append(pony_info['house'])
 
-                pony_info.setdefault('inns', [])
+                pony_info['inns'] = []
                 
                 
                 changeling = pony.get('IsChangelingWithSet', {}).get('AltPony', None)
@@ -613,8 +631,159 @@ class GetGameData:
         
         for pony_id, group in groups.items():
             ponies[pony_id]['group'] = group
-        
-        
+    
+    def get_houses(self):
+        self.categories.setdefault('houses', {})
+        self.categories['houses'].setdefault('name', {})
+        houses = self.categories['houses'].setdefault('items', {})
+
+        self.categories.setdefault('shops', {})
+        self.categories['shops'].setdefault('name', {})
+        shops = self.categories['shops'].setdefault('items', {})
+
+        os.makedirs(os.path.join(self.images_folder, 'houses'), exist_ok = True)
+        os.makedirs(os.path.join(self.images_folder, 'shops'), exist_ok = True)
+        os.makedirs(os.path.join(self.images_folder, 'products'), exist_ok = True)
+
+
+        index = {
+            'house': 0,
+            'shop': 0,
+        }
+
+        for house in track(
+            self.gameobjectdata['Pony_House'].values(),
+            description = 'Getting houses...',
+        ):
+            try:
+                is_shop = bool(house.get('ShopModule', {}).get('IsAShop', 0))
+                if is_shop:
+                    house_info = shops.setdefault(house.id, {})
+                    if house.id in self.houses:
+                        console.log(f'shop is house {house.id}')
+                else:
+                    house_info = houses.setdefault(house.id, {})
+                
+                house_info.setdefault('locked', False)
+                if is_shop:
+                    house_info['index'] = index['shop']
+                    index['shop'] += 1
+                else:
+                    house_info['index'] = index['house']
+                    index['house'] += 1
+                
+                house_info['name'] = translate(
+                    house.get('Name', {}).get('Unlocal', house.id),
+                    self.loc_files,
+                    house_info.setdefault('name', {}),
+                    house_info.get('locked', False),
+                )
+
+                image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'shops' if is_shop else 'houses', f'{house.id}.png')))
+                house_info['image'] = '/' + image_path
+
+                image_name = os.path.splitext(house.get('Shop', {}).get('Icon'))[0]
+                image_source = os.path.join(self.game_folder, image_name)
+                if not os.path.isfile(image_source + '.png') and not os.path.isfile(image_source + '.pvr'):
+                    image_name = os.path.splitext(house.get('Icon', {}).get('BookIcon'))[0]
+                    image_source = os.path.join(self.game_folder, image_name)
+
+                if not self.no_images:
+                    self.save_image(image_source, image_path)
+                
+                shopdata = self.gameobjectdata.get_object_shopdata(house.id)
+                if shopdata is None:
+                    console.log(f'shopdata not found {house.id}')
+                    house_info['location'] = 'UNKNOWN'
+                else:
+                    house_info['location'] = LOCATIONS.get(
+                        shopdata.get('Mapzone', -1),
+                        'UNKNOWN',
+                    )
+                
+                house_info['grid_size'] = house.get('GridData', {}).get('Size', 0) // 2
+                build = house_info.setdefault('build', {})
+                build['time'] = house.get('Construction', {}).get('ConstructionTime', 0)
+                build['skip_cost'] = house.get('Construction', {}).get('SkipCost', 0)
+                build['xp'] = house.get('XP', {}).get('OnConstructionComplete', 0) + house.get('XP', {}).get('OnConstructionStarted', 0)
+
+                visitors = [visitor for visitor in house.get('Visitors', {}).get('Ponies', []) if visitor]
+
+                for visitor in visitors:
+                    if not visitor in self.categories['ponies']['items']:
+                        if visitor:
+                            console.log(f'house {house.id} has nonexistent visitor "{visitor}"')
+                        continue
+                    
+                    inns = self.categories['ponies']['items'][visitor].setdefault('inns', [])
+                    if house.id not in inns:
+                        inns.append(house.id)
+                
+                house_info['visitors'] = visitors
+
+                if is_shop:
+                    product = house_info.setdefault('product', {})
+                
+                    consumable = None
+                
+                    consumable = self.gameobjectdata['Consumable'].get(house.get('ShopModule', {}).get('Consumable_A'))
+                    if consumable is not None:
+
+                        product['name'] = translate(
+                            consumable.get('Name', {}).get('Unlocal', ''),
+                            self.loc_files,
+                            product.setdefault('name', {}),
+                            house_info.get('locked', False),
+                        )
+
+                        image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'products', f'{consumable.id}.png')))
+                        product['image'] = '/' + image_path
+
+                        image_name = os.path.splitext(house.get('Shop', {}).get('Icon'))[0]
+                        image_source = os.path.join(self.game_folder, image_name)
+
+                        if not self.no_images:
+                            self.save_image(image_source, image_path)
+
+                        product['time'] = consumable.get('Production', {}).get('Time', 0)
+                        product['skip_cost'] = consumable.get('Production', {}).get('SkipCost', 0)
+                        product['xp'] = consumable.get('Consume', {}).get('XP', 0)
+                        product['bits'] = consumable.get('Consume', {}).get('SoftCoins', 0)
+                        product['gems'] = consumable.get('Consume', {}).get('Gems', 0)
+                    
+                    else:
+                        console.log(f'cannot find {house.id} consumable')
+                
+                house_info['can_sell'] = bool(house.get('Sell', {}).get('CanSell', 0))
+                
+                cost = house_info.setdefault('cost', {})
+
+                cost.setdefault('base', {
+                    'currency': '',
+                    'amount': 0,
+                })
+                cost.setdefault('actual', {
+                    'currency': '',
+                    'amount': 0,
+                })
+                cost.setdefault('token', {
+                    'id': '',
+                    'amount': 0,
+                })
+
+                if shopdata is not None:
+                    cost['base'] = {
+                        'currency': CURRENCY.get(shopdata.get('CurrencyType', 0), ''),
+                        'amount': shopdata.get('Cost', 0),
+                    }
+                    cost.setdefault('actual', cost['base'])
+                    cost['token']['id'] = shopdata.get('TaskTokenID', '')
+            
+            except Exception as e:
+                e.add_note(f'house id: {house.id}')
+                raise e
+
+
 
 def main():
     argparser = argparse.ArgumentParser()
