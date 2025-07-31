@@ -169,8 +169,36 @@ main {
         flex-direction: column;
     }
 
+    .title-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
     .sidebar-toggle {
         display: inline;
+    }
+
+    .sidebar-toggle input {
+        display: none;
+    }
+
+    .sidebar-toggle > label {
+        display: block;
+
+        background-image: url(/assets/images/ui/hamburger-menu.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+
+        width: 3rem;
+        height: 3rem;
+
+        cursor: pointer;
+    }
+
+    .sidebar-toggle > label:hover {
+        filter: brightness(75%);
     }
 
     body:has(.sidebar-toggle > input:checked) {
