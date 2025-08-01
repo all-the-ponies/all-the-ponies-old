@@ -148,12 +148,12 @@ export default class ItemListPage extends Page {
 
         this.searchCreated = true
 
-        document.querySelector('.search-container').appendChild(createElement(
-            'span',
-            {
-                text: new Date().getTime() - startTime
-            }
-        ))
+        // document.querySelector('.search-container').appendChild(createElement(
+        //     'span',
+        //     {
+        //         text: new Date().getTime() - startTime
+        //     }
+        // ))
     }
 
     sortResults(el1, el2) {
