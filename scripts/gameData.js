@@ -64,7 +64,7 @@ export default class GameData {
         }
 
         for (let [ponyId, ponyInfo] of Object.entries(this.ponies)) {
-            if (!options.includeUnused && ponyInfo.tags?.includes('unused')) {
+            if (!options.includeUnused && (ponyInfo.tags?.includes('unused') || ponyInfo.tags?.includes('npc') || ponyInfo.tags?.includes('quest'))) {
                 console.log('skipping', ponyId)
                 continue
             }
