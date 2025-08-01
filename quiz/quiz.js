@@ -141,6 +141,7 @@ export default class Quiz extends Page {
         this.startButton[0].disabled = true
         this.stopButton[0].disabled = false
         this.nameInput[0].disabled = false
+        this.optionsButton[0].disabled = true
         this.nameInput.val('')
 
         
@@ -164,6 +165,7 @@ export default class Quiz extends Page {
         this.stopButton[0].disabled = true
         this.nameInput[0].disabled = true
         this.languageSelector[0].disabled = false
+        this.optionsButton[0].disabled = false
         clearInterval(this._timerInterval)
     }
 
