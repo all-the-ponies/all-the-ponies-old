@@ -99,6 +99,16 @@ class ItemCard extends HTMLElement {
         cardBody.appendChild(image)
         container.appendChild(cardBody)
         shadow.appendChild(container)
+
+
+        container.addEventListener('click', (e) => {
+            const url = new URL(container.href)
+            if (location.origin == url.origin) {
+                e.preventDefault()
+                setURL(url)
+                window.app.refreshPage()
+            }
+        })
     }
 
     connectedCallback() {
