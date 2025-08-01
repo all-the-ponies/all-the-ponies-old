@@ -101,7 +101,7 @@ class AllThePonies {
         let name = this.gameData.transformName(this.nameInput.val(), this.options)
         if (name in this.ponyInfo.namesMap || name in this.ponyInfo.altNames) {
             let foundPony = name in this.ponyInfo.altNames ? this.ponyInfo.altNames[name] : this.ponyInfo.namesMap[name]
-            pony = this.gameData.getPony(foundPony.id, foundPony.name)
+            pony = this.gameData.getItem(foundPony.id, foundPony.name)
         }
 
         if (pony == null) {

@@ -99,14 +99,6 @@ class ItemCard extends HTMLElement {
         cardBody.appendChild(image)
         container.appendChild(cardBody)
         shadow.appendChild(container)
-
-        this.addEventListener('click', () => {
-            console.log('pony-card clicked')
-            // if (this.hasAttribute('href')) {
-            //     setURL(this.getAttribute('href'))
-            //     window.app.refreshPage()
-            // }
-        })
     }
 
     connectedCallback() {

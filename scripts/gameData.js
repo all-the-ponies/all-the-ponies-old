@@ -198,11 +198,11 @@ export default class GameData {
         return name
     }
 
-    matchName(name) {
+    matchName(name, category = 'ponies') {
         let transformedName = this.transformName(name)
         if (transformedName in this.filteredPonyNameMap || transformedName in this.filteredAltPonyNames) {
             let pony = transformedName in this.filteredAltPonyNames ? this.filteredAltPonyNames[transformedName] : this.filteredPonyNameMap[transformedName]
-            return this.getPony(pony.id, pony.name)
+            return this.getItem(pony.id, 'ponies', pony.name)
         }
 
         return null
@@ -239,24 +239,13 @@ export default class GameData {
         return result
     }
 
-    getPony(ponyId, usedName = null) {
-        if (typeof this.ponies[ponyId] == 'undefined') {
+    getItem(id, category = 'ponies', usedName = null) {
+        if (!this.categories[category]?.items[id]) {
             return null
         }
         return {
-            ...structuredClone(this.ponies[ponyId]),
+            ...structuredClone(this.categories[category]?.items[id]),
             usedName: usedName,
-        }
-    }
-
-    getItem(itemId) {
-        if (typeof this.gameData.items[itemId] == 'undefined') {
-            return null
-        }
-        return {
-            ...structuredClone(this.gameData.items[itemId]),
-            id: itemId,
-            image: `/assets/images/items/${itemId}.png`,
         }
     }
 }

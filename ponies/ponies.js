@@ -86,7 +86,7 @@ export default class Ponies extends Page {
     }
 
     createPonyCard(ponyId) {
-        let pony = gameData.getPony(ponyId)
+        let pony = gameData.getItem(ponyId)
         return ponyCard(pony)
     }
 
@@ -107,7 +107,7 @@ export default class Ponies extends Page {
             if (ponyCard == null) {
                 elements.push(this.createPonyCard(ponyId))
             } else {
-                let pony = gameData.getPony(ponyId)
+                let pony = gameData.getItem(ponyId)
                 ponyCard.setAttribute('name', pony.name[this.language])
                 elements.push(ponyCard)
             }
@@ -119,8 +119,8 @@ export default class Ponies extends Page {
     }
 
     sortResults(el1, el2) {
-        let pony1 = gameData.getPony(el1.id)
-        let pony2 = gameData.getPony(el2.id)
+        let pony1 = gameData.getItem(el1.id)
+        let pony2 = gameData.getItem(el2.id)
         return pony1.index - pony2.index
     }
 
@@ -153,7 +153,7 @@ export default class Ponies extends Page {
         this.searchSection.css('display', 'none')
         this.ponyProfileSection.css('display', 'block')
 
-        let pony = gameData.getPony(ponyId)
+        let pony = gameData.getItem(ponyId)
         // this.searchResultsElement.empty()
 
 
