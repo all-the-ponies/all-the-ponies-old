@@ -638,7 +638,7 @@ class GetGameData:
         houses = self.categories['houses'].setdefault('items', {})
 
         self.categories.setdefault('shops', {})
-        self.categories['shops'].setdefault('name', {})
+        self.categories['shops']['name'] = translate('STR_STORE_SHOPS', self.loc_files)
         shops = self.categories['shops'].setdefault('items', {})
 
         os.makedirs(os.path.join(self.images_folder, 'houses'), exist_ok = True)

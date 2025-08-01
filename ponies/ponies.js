@@ -10,12 +10,6 @@ export default class Ponies extends ItemListPage {
     parameter = 'pony'
 
 
-    createItemCard(ponyId) {
-        let pony = gameData.getItem(ponyId, this.category)
-        return ponyCard(pony)
-    }
-
-
     async showItemProfile(ponyId) {
         super.showItemProfile()
 

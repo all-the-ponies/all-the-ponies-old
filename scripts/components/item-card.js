@@ -162,11 +162,11 @@ export function ponyCard(pony) {
     })
 }
 
-export function houseCard(house) {
+export function itemCard(item, parameter = 'pony') {
     return createElement('item-card', {
-        id: house.id,
-        name: house.name[app.language],
-        image: house.image,
-        href: `?house=${house.id}`,
+        id: item.id,
+        name: item.name[app.language],
+        image: parameter == 'pony' ? item.image.full : item.image,
+        href: `?${parameter}=${item.id}`,
     })
 }

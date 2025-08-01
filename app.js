@@ -5,6 +5,7 @@ import '/scripts/jquery-3.7.1.min.js'
 import Index from "./index.js"
 import Ponies from "./ponies/ponies.js"
 import Houses from "./houses/houses.js"
+import Shops from "./shops/shops.js"
 import Quiz from "./quiz/quiz.js"
 
 import { setURL } from "./scripts/common.js"
@@ -89,6 +90,7 @@ class App {
         '/': new Index(),
         '/ponies/': new Ponies(),
         '/houses/': new Houses(),
+        '/shops/': new Shops(),
         '/quiz/': new Quiz(),
     }
 
@@ -96,6 +98,7 @@ class App {
         return [
             ['/ponies/', gameData.categories.ponies.name],
             ['/houses/', gameData.categories.houses.name],
+            ['/shops/', gameData.categories.shops.name],
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
         ]

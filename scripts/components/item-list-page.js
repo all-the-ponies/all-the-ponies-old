@@ -2,7 +2,7 @@ import { createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase } fro
 import Page from "../page.js"
 import '../jquery-3.7.1.min.js'
 
-import { ponyCard } from "./item-card.js";
+import { itemCard } from "./item-card.js";
 
 export default class ItemListPage extends Page {
     category = 'ponies'
@@ -88,9 +88,9 @@ export default class ItemListPage extends Page {
         }
     }
 
-    createItemCard(ponyId) {
-        let pony = gameData.getItem(ponyId)
-        return ponyCard(pony)
+    createItemCard(itemId) {
+        let item = gameData.getItem(itemId, this.category)
+        return itemCard(item, this.parameter)
     }
 
     showSearch() {
