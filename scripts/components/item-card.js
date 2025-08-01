@@ -50,7 +50,8 @@ class ItemCard extends HTMLElement {
                             scale 150ms ease-out;
             }
             
-            :host(:hover) {
+            :host(:hover),
+            :host(:focus) {
                 box-shadow: var(--box-shadow),
                             0px 0px 5px hsl(211, 30%, 30%);
                 scale: 105%;
