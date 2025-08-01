@@ -4,6 +4,7 @@ import '/scripts/jquery-3.7.1.min.js'
 
 import Index from "./index.js"
 import Ponies from "./ponies/ponies.js"
+import Houses from "./houses/houses.js"
 import Quiz from "./quiz/quiz.js"
 
 import { setURL } from "./scripts/common.js"
@@ -87,12 +88,14 @@ class App {
     routes = {
         '/': new Index(),
         '/ponies/': new Ponies(),
+        '/houses/': new Houses(),
         '/quiz/': new Quiz(),
     }
 
     get sidebar() {
         return [
             ['/ponies/', gameData.categories.ponies.name],
+            ['/houses/', gameData.categories.houses.name],
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
         ]

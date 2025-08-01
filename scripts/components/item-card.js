@@ -161,3 +161,12 @@ export function ponyCard(pony) {
         href: `?pony=${pony.id}`,
     })
 }
+
+export function houseCard(house) {
+    return createElement('item-card', {
+        id: house.id,
+        name: house.name[app.language],
+        image: house.image,
+        href: `?house=${house.id}`,
+    })
+}
