@@ -100,12 +100,36 @@ export default class ItemListPage extends Page {
     }
 
     async createSearchCards() {
+        const waitForNextTask = () => {
+        const { port1, port2 } = waitForNextTask.channel ??= new MessageChannel();
+            return new Promise( (res) => {
+                port1.addEventListener("message", () => res(), { once: true } );
+                port1.start();
+                port2.postMessage("");
+            } );
+        };
+
+        const startTime = new Date().getTime()
+        
         // this.searchResultsElement.empty()
         console.log('creating search cards')
 
         let elements = []
+        const items = Object.keys(gameData.categories[this.category].items)
+
+        window.app.progressBar.max = items.length
+        window.app.progressBar.progress = 0
         
-        for (let itemId of Object.keys(gameData.categories[this.category].items)) {
+        let i = 0
+        const chunk_size = 200
+
+        await waitForNextTask()
+        for (let itemId of items.sort((a, b) => (this.sortResults(a, b)))) {
+            if (!this.running) {
+                window.app.progressBar.progress = 0
+                return
+            }
+
             let itemCard = document.getElementById(itemId)
             if (itemCard == null) {
                 elements.push(this.createItemCard(itemId))
@@ -114,16 +138,28 @@ export default class ItemListPage extends Page {
                 itemCard.setAttribute('name', item.name[this.language])
                 elements.push(itemCard)
             }
+            window.app.progressBar.progress += 1
+            if (i++ % chunk_size === 0) {
+                await waitForNextTask()
+            }
         }
 
-        this.searchResultsElement[0].replaceChildren(...elements.sort((a, b) => this.sortResults(a, b)))
+        this.searchResultsElement[0].replaceChildren(...elements)
 
         this.searchCreated = true
+
+        document.querySelector('.search-container').appendChild(createElement(
+            'span',
+            {
+                text: new Date().getTime() - startTime
+            }
+        ))
     }
 
     sortResults(el1, el2) {
-        let item1 = gameData.getItem(el1.id, this.category)
-        let item2 = gameData.getItem(el2.id, this.category)
+        // return el1.index - el2.index
+        let item1 = gameData.getItem(el1, this.category)
+        let item2 = gameData.getItem(el2, this.category)
         return item1.index - item2.index
     }
 

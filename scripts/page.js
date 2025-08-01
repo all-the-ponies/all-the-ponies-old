@@ -1,5 +1,7 @@
 export default class Page {
     constructor() {
+        this.running = false
+        
         this.content = document.getElementById('page-content')
         this.languageSelector = document.getElementById('language')
     }

@@ -40,6 +40,29 @@ window.addEventListener('popstate', (e) => {
 
 class App {
     constructor() {
+        this.progressBar = {
+            element: document.getElementById('loading-bar'),
+            set max(max) {
+                this.element.max = max
+            },
+            get max() {
+                return this.element.max
+            },
+            set progress(progress) {
+                this.element.value = progress
+                if (this.progress < this.max) {
+                    this.element.style.display = 'block'
+                } else {
+                    this.element.style.display = 'none'
+                }
+            },
+            get progress() {
+                return this.element.value
+            }
+        }
+
+
+
         this.languageSelector = document.getElementById('language')
         this.languageSelector.addEventListener('change', () => this.refreshAll(true))
         this.sidebarToggle = document.getElementById('sidebar-toggle')
@@ -49,6 +72,7 @@ class App {
         this.sidebarElement = document.getElementById('sidebar-links')
 
         this.currentPage = null
+        this.currentRoute = null
 
         this.refreshAll()
     }
@@ -146,9 +170,12 @@ class App {
                 console.log('updating')
                 route.update(reload)
             } else {
+                if (this.currentRoute) this.currentRoute.running = false
+                route.running = true
                 route.load()
             }
             this.currentPage = path
+            this.currentRoute = route
         } else {
             this.content.innerHTML = '404 Error'
         }

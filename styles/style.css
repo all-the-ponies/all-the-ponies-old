@@ -66,6 +66,45 @@ body {
     color: var(--blue);
 }
 
+#loading-bar {
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    pointer-events: none;
+}
+
+
+#loading-bar[value] {
+  --color: blue;
+  --background: transparent; /* the background color */
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 0;
+  background: var(--background);
+}
+#loading-bar[value]::-webkit-progress-bar {
+  border-radius: 0;
+  background: var(--background);
+}
+#loading-bar[value]::-webkit-progress-value {
+  border-radius: 0;
+  background: var(--color);
+}
+
+#loading-bar[value]::-moz-progress-bar {
+  border-radius: 0;
+  background: var(--color);
+}
+
 header {
     --padding-inline: 0.5rem;
 
