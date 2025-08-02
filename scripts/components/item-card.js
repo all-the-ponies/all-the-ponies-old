@@ -40,6 +40,21 @@ class ItemCard extends HTMLElement {
         image.id = 'item-image'
         image.loading = 'lazy'
 
+        image.addEventListener('load', () => {
+            this.loaded = true
+        })
+        
+        image.addEventListener('error', () => {
+            console.log('failed to load', image.src)
+            console.log('placeholder', this.getAttribute('image-placeholder'))
+            if (image.src == this.getAttribute('image-placeholder')) {
+                return
+            }
+            image.src = this.getAttribute('image-placeholder')
+
+            this.loaded = true
+        })
+
         const style = document.createElement('style')
         style.textContent = `
             * {
@@ -166,20 +181,6 @@ class ItemCard extends HTMLElement {
         } else {
             imgUrl = '/assets/images/ponies/full/Pony_Placeholder.png'
         }
-
-        image.addEventListener('load', () => {
-            this.loaded = true
-        })
-        image.addEventListener('error', () => {
-            console.log('failed to load', image.src)
-            console.log('placeholder', this.getAttribute('image-placeholder'))
-            if (image.src == this.getAttribute('image-placeholder')) {
-                return
-            }
-            image.src = this.getAttribute('image-placeholder')
-
-            this.loaded = true
-        })
         image.src = imgUrl
     }
 }
