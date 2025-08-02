@@ -1,9 +1,26 @@
 import { createElement } from "../common.js"
 import { setURL } from "../common.js"
 
+
+const CardObserver = new IntersectionObserver((elements) => {
+    elements.forEach(element => {
+        console.log(element)
+        element.target.load()
+    });
+}, {
+    root: null,
+    rootMargin: '20px',
+    threshold: 0.5,
+})
+
+
 class ItemCard extends HTMLElement {
     constructor() {
         super()
+
+        CardObserver.observe(this)
+
+        this.loaded = false
 
         const shadow = this.attachShadow({ mode: "open" })
 
@@ -21,6 +38,7 @@ class ItemCard extends HTMLElement {
         const image = document.createElement('img')
         image.classList.add('item-image')
         image.id = 'item-image'
+        image.loading = 'lazy'
 
         const style = document.createElement('style')
         style.textContent = `
@@ -131,10 +149,17 @@ class ItemCard extends HTMLElement {
         
         const name = shadow.getElementById('item-name')
         const cardBody = shadow.getElementById('card-body')
-        const image = shadow.getElementById('item-image')
 
         name.textContent = this.getAttribute('name')
 
+        // this.load()
+    }
+
+    load() {
+        if (this.loaded) {
+            return
+        }
+        const image = this.shadowRoot.getElementById('item-image')
         let imgUrl
         if (this.hasAttribute('image')) {
             imgUrl = this.getAttribute('image')
@@ -142,11 +167,21 @@ class ItemCard extends HTMLElement {
             imgUrl = '/assets/images/ponies/full/Pony_Placeholder.png'
         }
 
-        image.loading = 'lazy'
+        image.addEventListener('load', () => {
+            this.loaded = true
+        })
+        image.addEventListener('error', () => {
+            console.log('failed to load', image.src)
+            console.log('placeholder', this.getAttribute('image-placeholder'))
+            if (image.src == this.getAttribute('image-placeholder')) {
+                return
+            }
+            image.src = this.getAttribute('image-placeholder')
+
+            this.loaded = true
+        })
         image.src = imgUrl
     }
-
-
 }
 
 customElements.define(
@@ -164,10 +199,15 @@ export function ponyCard(pony) {
 }
 
 export function itemCard(item, parameter = 'pony') {
+    const imagePlaceholders = {
+        'pony': '/assets/images/ponies/full/Pony_Placeholder.png',
+    }
+
     return createElement('item-card', {
         id: item.id,
         name: item.name[app.language],
         image: parameter == 'pony' ? item.image.full : item.image,
         href: `?${parameter}=${item.id}`,
+        'image-placeholder': imagePlaceholders[parameter] ? imagePlaceholders[parameter] : imagePlaceholders['pony'],
     })
 }

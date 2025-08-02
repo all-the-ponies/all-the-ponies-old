@@ -11,17 +11,12 @@ export default class Ponies extends ItemListPage {
 
 
     async showItemProfile(ponyId) {
-        super.showItemProfile()
+        super.showItemProfile(ponyId)
 
         let pony = gameData.getItem(ponyId, this.category)
         // this.searchResultsElement.empty()
 
 
-        this.ponyProfileSection.find('#pony-profile-name').text(pony.name[this.language])
-        console.log(pony.image.full)
-        this.ponyProfileSection.find('#pony-profile-image').attr('src', pony.image.full)
-        this.ponyProfileSection.find('#pony-profile-portrait-image').attr('src', pony.image.portrait)
-        this.ponyProfileSection.find('#pony-profile-description').text(pony.description[this.language])
         this.ponyProfileSection.find('[data-pony-info="level"]').text(pony.unlock_level)
         this.ponyProfileSection.find('[data-pony-info="town"]').text(toTitleCase(LOC.translate(pony.location)))
         this.ponyProfileSection.find('[data-pony-info="arrival-bonus"]').text(pony.arrival_xp)

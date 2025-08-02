@@ -185,11 +185,21 @@ export default class ItemListPage extends Page {
     }
 
     async showItemProfile(itemId) {
+        const item = gameData.getItem(itemId, this.category)
+        
         $('.to-search').attr('href', `?q=${encodeURI(this.searchBar.val())}`)
         
         this.currentScreen = 'ponyProfile'
 
         this.searchSection.css('display', 'none')
         this.ponyProfileSection.css('display', 'block')
+
+        console.log('item', itemId, item)
+        if (this.category == 'ponies') {
+            document.getElementById('item-profile-portrait-image').src = item.image.portrait
+        }
+        document.getElementById('item-profile-image').src = this.category == 'ponies' ? item.image.full : item.image
+        document.getElementById('item-profile-name').textContent = item.name[this.language]
+        document.getElementById('item-profile-description').textContent = item.description[this.language]
     }
 }
