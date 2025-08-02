@@ -117,6 +117,11 @@ PRIZE_TYPES = {
     'Token_CE_Lottery': 'Crystal_Coin',
 }
 
+def strToInt(value: str):
+    try:
+        return int(float(value))
+    except ValueError:
+        return -1
 
 def normalize_path(path: str):
     return pathlib.Path(path).as_posix()
@@ -298,7 +303,7 @@ class GetGameData:
 
         self.categories = self.game_data.setdefault('categories', {})
 
-        self.houses = []
+        self.houses = {}
 
         self.get_ponies()
         self.get_houses()
@@ -498,7 +503,7 @@ class GetGameData:
                     'UNKNOWN',
                 )
                 pony_info['house'] = pony.get('House', {}).get('Type')
-                self.houses.append(pony_info['house'])
+                self.houses.setdefault(pony_info['house'], []).append(pony.id)
 
                 pony_info['inns'] = []
                 
@@ -696,8 +701,9 @@ class GetGameData:
                     console.log(f'shopdata not found {house.id}')
                     house_info['location'] = 'UNKNOWN'
                 else:
+                    # house_info['location'] = shopdata.get('MapZone', -1)
                     house_info['location'] = LOCATIONS.get(
-                        shopdata.get('Mapzone', -1),
+                        strToInt(shopdata.get('MapZone', -1)),
                         'UNKNOWN',
                     )
                 
@@ -721,7 +727,17 @@ class GetGameData:
                 
                 house_info['visitors'] = visitors
 
+
+                house_info['residents'] = self.houses.get(house.id, [])
+                if is_shop and house_info['residents']:
+                    console.print(f'[red]Shop {house.id} has residents[/]')
+                
+                if (house_info['location'] == 'UNKNOWN' and len(house_info['residents'])):
+                    house_info['location'] = self.categories['ponies']['items'][house_info['residents'][0]]['location']
+                    console.log(f'found location {house_info["location"]}')
+
                 if is_shop:
+
                     product = house_info.setdefault('product', {})
                 
                     consumable = None
@@ -771,13 +787,46 @@ class GetGameData:
                     'amount': 0,
                 })
 
+                house_info.setdefault('unlock_level', 0)
+
                 if shopdata is not None:
+                    house_info['unlock_level'] = shopdata.get('UnlockValue', 0)
+
                     cost['base'] = {
                         'currency': CURRENCY.get(shopdata.get('CurrencyType', 0), ''),
                         'amount': shopdata.get('Cost', 0),
                     }
                     cost.setdefault('actual', cost['base'])
                     cost['token']['id'] = shopdata.get('TaskTokenID', '')
+                
+                if is_shop:
+                    shops[house.id] = {
+                        'locked': house_info['locked'],
+                        'index': house_info['index'],
+                        'name': house_info['name'],
+                        'image': house_info['image'],
+                        'unlock_level': house_info['unlock_level'],
+                        'location': house_info['location'],
+                        'grid_size': house_info['grid_size'],
+                        'build': house_info['build'],
+                        'visitors': house_info['visitors'],
+                        'residents': house_info['residents'],
+                        'product': house_info['product'],
+                        'can_sell': house_info['can_sell'],
+                        'cost': house_info['cost'],
+                    }
+                else:
+                    houses[house.id] = {
+                        'locked': house_info['locked'],
+                        'index': house_info['index'],
+                        'name': house_info['name'],
+                        'image': house_info['image'],
+                        'location': house_info['location'],
+                        'grid_size': house_info['grid_size'],
+                        'build': house_info['build'],
+                        'visitors': house_info['visitors'],
+                        'residents': house_info['residents'],
+                    }
             
             except Exception as e:
                 e.add_note(f'house id: {house.id}')

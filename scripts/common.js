@@ -153,3 +153,28 @@ export function createElement(tagName, attrs = {}, children = []) {
 
   return element
 }
+
+
+export function formatTime(time) {
+  if (Math.trunc(time) == 0) return "0s";
+  var out = "";
+  var d_h_m_s = [0, 0, 0, 0];
+  var letters = ["d", "h", "m", "s"];
+  [time, d_h_m_s[0]] = truncTime(time, 86400);
+  [time, d_h_m_s[1]] = truncTime(time, 3600);
+  [time, d_h_m_s[2]] = truncTime(time, 60);
+  if (d_h_m_s[0] > 0 || d_h_m_s[1] > 0) d_h_m_s[3] = 0;
+  else d_h_m_s[3] = Math.trunc(time);
+  for (var i = 0; i < d_h_m_s.length; i++) {
+    if (d_h_m_s[i] > 0) {
+      out += " " + d_h_m_s[i] + letters[i];
+    }
+  }
+  return out.trim();
+}
+
+function truncTime(time, value) {
+  var num = Math.trunc(time / value);
+  time -= value * num;
+  return [time, num];
+}

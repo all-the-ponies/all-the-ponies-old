@@ -201,5 +201,7 @@ export default class ItemListPage extends Page {
         }
         document.getElementById('item-profile-image').src = this.category == 'ponies' ? item.image.full : item.image
         document.getElementById('item-profile-name').textContent = item.name[this.language]
+
+        return item
     }
 }
