@@ -197,9 +197,9 @@ export default class ItemListPage extends Page {
         console.log('item', itemId, item)
         if (this.category == 'ponies') {
             document.getElementById('item-profile-portrait-image').src = item.image.portrait
+            document.getElementById('item-profile-description').textContent = item.description[this.language]
         }
         document.getElementById('item-profile-image').src = this.category == 'ponies' ? item.image.full : item.image
         document.getElementById('item-profile-name').textContent = item.name[this.language]
-        document.getElementById('item-profile-description').textContent = item.description[this.language]
     }
 }
