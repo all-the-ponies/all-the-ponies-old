@@ -4,7 +4,6 @@ import { setURL } from "../common.js"
 
 const CardObserver = new IntersectionObserver((elements) => {
     elements.forEach(element => {
-        console.log(element)
         element.target.load()
     });
 }, {
@@ -43,10 +42,8 @@ class ItemCard extends HTMLElement {
         image.addEventListener('load', () => {
             this.loaded = true
         })
-        
+
         image.addEventListener('error', () => {
-            console.log('failed to load', image.src)
-            console.log('placeholder', this.getAttribute('image-placeholder'))
             if (image.src == this.getAttribute('image-placeholder')) {
                 return
             }
