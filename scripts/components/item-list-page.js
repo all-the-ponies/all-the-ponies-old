@@ -25,16 +25,15 @@ export default class ItemListPage extends Page {
 
         let selectedPony = getUrlParameter(this.parameter)
 
+        this.searchScroll = 0
+
         $('.to-search').on('click', (e) => {
             e.preventDefault()
             setUrlParameter(this.parameter)
             this.updateSearch()
-        })
 
-        // window.addEventListener('popstate', (e) => {
-        //     console.log(e)
-        //     this.reload()
-        // })
+            scrollTo({top: this.searchScroll})
+        })
 
         this.searchBar.on('input', () => this.updateSearch())
 
@@ -46,7 +45,7 @@ export default class ItemListPage extends Page {
         let selectedPony = getUrlParameter(this.parameter)
         
         if (selectedPony) {
-            this.currentScreen = 'ponyProfile'
+            this.currentScreen = 'itemProfile'
             this.showItemProfile(selectedPony)
         } else {
             this.currentScreen = 'search'
@@ -70,9 +69,17 @@ export default class ItemListPage extends Page {
     async update(reload = false) {
         let screen = 'search'
         if (getUrlParameter(this.parameter) in gameData.categories[this.category].items) {
-            screen = 'ponyProfile'
+            if (this.currentScreen == 'search') {
+                this.searchScroll = document.documentElement.scrollTop || document.body.scrollTop
+            }
+            
+            screen = 'itemProfile'
+            
+            scrollTo({top: 0})
             this.showItemProfile(getUrlParameter(this.parameter))
         }
+        
+        this.currentScreen = screen
 
         if (reload) {
             await this.createSearchCards()
@@ -189,7 +196,7 @@ export default class ItemListPage extends Page {
         
         $('.to-search').attr('href', `?q=${encodeURI(this.searchBar.val())}`)
         
-        this.currentScreen = 'ponyProfile'
+        this.currentScreen = 'itemProfile'
 
         this.searchSection.css('display', 'none')
         this.ponyProfileSection.css('display', 'block')

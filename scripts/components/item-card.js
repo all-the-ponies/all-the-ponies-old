@@ -1,4 +1,4 @@
-import { createElement } from "../common.js"
+import { createElement, linkHandler } from "../common.js"
 import { setURL } from "../common.js"
 
 
@@ -132,14 +132,7 @@ class ItemCard extends HTMLElement {
         shadow.appendChild(container)
 
 
-        container.addEventListener('click', (e) => {
-            const url = new URL(container.href)
-            if (location.origin == url.origin) {
-                e.preventDefault()
-                setURL(url)
-                window.app.refreshPage()
-            }
-        })
+        container.addEventListener('click', linkHandler)
     }
 
     connectedCallback() {

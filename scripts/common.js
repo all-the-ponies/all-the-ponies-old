@@ -137,6 +137,23 @@ export function getUrlParameter(param) {
   return value == null ? null : decodeURIComponent(value)
 }
 
+export function linkHandler(e) {
+    // e.preventDefault()
+    console.log('target', e.target)
+    const link = e.target.closest('a')
+    console.log('link', link)
+    if (link?.tagName == 'A') {
+        const url = new URL(link.href)
+        console.log(location)
+        console.log(url)
+        if (url.origin == location.origin) {
+            e.preventDefault()
+            setURL(link.href)
+            window.app.refreshPage()
+        }
+    }
+}
+
 export function createElement(tagName, attrs = {}, children = []) {
   let element = document.createElement(tagName)
   for (let [attr, value] of Object.entries(attrs)) {

@@ -8,33 +8,14 @@ import Houses from "./houses/houses.js"
 import Shops from "./shops/shops.js"
 import Quiz from "./quiz/quiz.js"
 
-import { setURL } from "./scripts/common.js"
+import { linkHandler, setURL } from "./scripts/common.js"
 
 window.LOC = new Localization('/assets/json/localization.json')
 window.gameData = new GameData('/assets/json/game-data.json')
 
-document.addEventListener('click', (e) => {
-    // e.preventDefault()
-    console.log('target', e.target)
-    const link = e.target.closest('a')
-    console.log('link', link)
-    if (link?.tagName == 'A') {
-        const url = new URL(link.href)
-        console.log(location)
-        console.log(url)
-        if (url.origin == location.origin) {
-            e.preventDefault()
-            setURL(link.href)
-            console.log('same page', link.href)
-            window.app.refreshPage()
-        } else {
-            console.log('not same domain')
-        }
-    }
-})
+document.addEventListener('click', linkHandler)
 
 window.addEventListener('popstate', (e) => {
-    console.log(e)
     window.app.refreshPage()
 })
 
