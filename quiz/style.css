@@ -6,6 +6,11 @@
 }
 
 #name-input {
+    width: 100%;
+}
+
+/* 
+#name-input {
     display: block;
     resize: none;
     width: 100%;
@@ -45,7 +50,7 @@
 
 #name-input:disabled::placeholder {
     color: hsl(0, 0%, 80%);
-}
+} */
 
 #start:disabled {
     display: none;

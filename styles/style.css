@@ -408,6 +408,55 @@ main {
     outline: none;
 }
 
+/* search bar */
+
+.search-box {
+    /* display: block; */
+    resize: none;
+    /* width: 100%; */
+    height: auto;
+    font-size: 1.2rem;
+    font-family: var(--font-family);
+    color: var(--blue);
+
+    border: var(--pink-enabled) 2px solid;
+    background-color: rgba(252, 252, 252, 0.7);
+
+    text-wrap: nowrap;
+    scrollbar-width: none;
+
+    padding: 0.2em;
+
+    margin: 0;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: var(--pink);
+}
+
+.search-box:disabled {
+    background-color: rgba(252, 252, 252, 0.4);
+    border-color: var(--pink-disabled);
+}
+
+.search-box::placeholder {
+    color: hsl(0, 0%, 70%);
+}
+
+.search-box:focus::placeholder {
+    color: hsl(0, 0%, 60%);
+}
+
+.search-box:disabled::placeholder {
+    color: hsl(0, 0%, 80%);
+}
+
+.search-box::-webkit-search-decoration,
+.search-box::-webkit-search-cancel-button {
+  appearance: none;
+}
+
 /* dialog */
 
 .dialog {
