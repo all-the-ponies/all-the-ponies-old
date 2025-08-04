@@ -13,7 +13,7 @@ const CardObserver = new IntersectionObserver((elements) => {
 })
 
 
-class ItemCard extends HTMLElement {
+class ObjectCard extends HTMLElement {
     constructor() {
         super()
 
@@ -176,8 +176,8 @@ class ItemCard extends HTMLElement {
 }
 
 customElements.define(
-    'item-card',
-    ItemCard,
+    'object-card',
+    ObjectCard,
 )
 
 export function ponyCard(pony) {
@@ -189,16 +189,16 @@ export function ponyCard(pony) {
     })
 }
 
-export function itemCard(item, parameter = 'pony') {
+export function objectCard(object, parameter = 'pony') {
     const imagePlaceholders = {
         'pony': '/assets/images/ponies/full/Pony_Placeholder.png',
     }
 
-    return createElement('item-card', {
-        id: item.id,
-        name: item.name[app.language],
-        image: parameter == 'pony' ? item.image.full : item.image,
-        href: `?${parameter}=${item.id}`,
+    return createElement('object-card', {
+        id: object.id,
+        name: object.name[app.language],
+        image: parameter == 'pony' ? object.image.full : object.image,
+        href: `?${parameter}=${object.id}`,
         'image-placeholder': imagePlaceholders[parameter] ? imagePlaceholders[parameter] : imagePlaceholders['pony'],
     })
 }

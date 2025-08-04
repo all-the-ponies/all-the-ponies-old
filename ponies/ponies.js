@@ -1,31 +1,25 @@
 import { createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
-import Page from "../scripts/page.js"
 import '../scripts/jquery-3.7.1.min.js'
 
-import { ponyCard } from "/scripts/components/item-card.js";
-import ItemListPage from "../scripts/components/item-list-page.js";
+import ObjectListPage from "../scripts/components/object-list-page.js";
 
-export default class Ponies extends ItemListPage {
+export default class Ponies extends ObjectListPage {
     category = 'ponies'
     parameter = 'pony'
 
 
     async showItemProfile(ponyId) {
-        super.showItemProfile(ponyId)
+        let pony = super.showItemProfile(ponyId)
 
-        let pony = gameData.getItem(ponyId, this.category)
-        // this.searchResultsElement.empty()
-
-
-        this.ponyProfileSection.find('[data-item-info="level"]').text(pony.unlock_level)
-        this.ponyProfileSection.find('[data-item-info="town"]').text(toTitleCase(LOC.translate(pony.location)))
-        this.ponyProfileSection.find('[data-item-info="arrival-bonus"]').text(pony.arrival_xp)
-        this.ponyProfileSection.find('[data-item-info="House"]').text(pony.house)
-        this.ponyProfileSection.find('[data-item-info="minigame-cooldown"]').text(pony.minigame.cooldown + 's')
-        this.ponyProfileSection.find('[data-item-info="minigame-skip-cost"]').text(pony.minigame.skip_cost)
+        this.ponyProfileSection.find('[data-object-info="level"]').text(pony.unlock_level)
+        this.ponyProfileSection.find('[data-object-info="town"]').text(toTitleCase(LOC.translate(pony.location)))
+        this.ponyProfileSection.find('[data-object-info="arrival-bonus"]').text(pony.arrival_xp)
+        this.ponyProfileSection.find('[data-object-info="House"]').text(pony.house)
+        this.ponyProfileSection.find('[data-object-info="minigame-cooldown"]').text(pony.minigame.cooldown + 's')
+        this.ponyProfileSection.find('[data-object-info="minigame-skip-cost"]').text(pony.minigame.skip_cost)
 
         return
-        let starRewardsElement = this.ponyProfileSection.find('[data-item-info="star-rewards"]')
+        let starRewardsElement = this.ponyProfileSection.find('[data-object-info="star-rewards"]')
         let starRewardsBar = starRewardsElement.find('.star-rewards-bar')
         if (pony.rewards.length == 0 || pony.max_level) {
             starRewardsBar.css('display', 'none')
@@ -36,9 +30,9 @@ export default class Ponies extends ItemListPage {
             let i = 0
             for (let i = 0; i < 5; i++) {
                 let reward = pony.rewards[i]
-                let item = gameData.getItem(reward.item)
+                let object = gameData.getObject(reward.object)
                 let img = starRewardsBar.children().eq(i).find('img')
-                img.attr('src', item.image)
+                img.attr('src', object.image)
             }
         }
         // this.ponyProfileSection.find('[data-item-info="minigame-skip-cost"]').text(pony.minigames.minigame_skip_cost)

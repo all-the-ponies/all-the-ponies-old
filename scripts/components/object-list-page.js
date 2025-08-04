@@ -2,9 +2,9 @@ import { createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase } fro
 import Page from "../page.js"
 import '../jquery-3.7.1.min.js'
 
-import { itemCard } from "./item-card.js";
+import { objectCard } from "./object-card.js";
 
-export default class ItemListPage extends Page {
+export default class ObjectListPage extends Page {
     category = 'ponies'
     parameter = 'pony'
     
@@ -68,7 +68,7 @@ export default class ItemListPage extends Page {
     
     async update(reload = false) {
         let screen = 'search'
-        if (getUrlParameter(this.parameter) in gameData.categories[this.category].items) {
+        if (getUrlParameter(this.parameter) in gameData.categories[this.category].objects) {
             if (this.currentScreen == 'search') {
                 this.searchScroll = document.documentElement.scrollTop || document.body.scrollTop
             }
@@ -95,9 +95,9 @@ export default class ItemListPage extends Page {
         }
     }
 
-    createItemCard(itemId) {
-        let item = gameData.getItem(itemId, this.category)
-        return itemCard(item, this.parameter)
+    createItemCard(objectId) {
+        let object = gameData.getObject(objectId, this.category)
+        return objectCard(object, this.parameter)
     }
 
     showSearch() {
@@ -122,28 +122,28 @@ export default class ItemListPage extends Page {
         console.log('creating search cards')
 
         let elements = []
-        const items = Object.keys(gameData.categories[this.category].items)
+        const objects = Object.keys(gameData.categories[this.category].objects)
 
-        window.app.progressBar.max = items.length
+        window.app.progressBar.max = objects.length
         window.app.progressBar.progress = 0
         
         let i = 0
         const chunk_size = 200
 
         await waitForNextTask()
-        for (let itemId of items.sort((a, b) => (this.sortResults(a, b)))) {
+        for (let itemId of objects.sort((a, b) => (this.sortResults(a, b)))) {
             if (!this.running) {
                 window.app.progressBar.progress = 0
                 return
             }
 
-            let itemCard = document.getElementById(itemId)
-            if (itemCard == null) {
+            let objectCard = document.getElementById(itemId)
+            if (objectCard == null) {
                 elements.push(this.createItemCard(itemId))
             } else {
-                let item = gameData.getItem(itemId, this.category)
-                itemCard.setAttribute('name', item.name[this.language])
-                elements.push(itemCard)
+                let object = gameData.getObject(itemId, this.category)
+                objectCard.setAttribute('name', object.name[this.language])
+                elements.push(objectCard)
             }
             window.app.progressBar.progress += 1
             if (i++ % chunk_size === 0) {
@@ -165,8 +165,8 @@ export default class ItemListPage extends Page {
 
     sortResults(el1, el2) {
         // return el1.index - el2.index
-        let item1 = gameData.getItem(el1, this.category)
-        let item2 = gameData.getItem(el2, this.category)
+        let item1 = gameData.getObject(el1, this.category)
+        let item2 = gameData.getObject(el2, this.category)
         return item1.index - item2.index
     }
 
@@ -192,7 +192,7 @@ export default class ItemListPage extends Page {
     }
 
     async showItemProfile(itemId) {
-        const item = gameData.getItem(itemId, this.category)
+        const object = gameData.getObject(itemId, this.category)
         
         $('.to-search').attr('href', `?q=${encodeURI(this.searchBar.val())}`)
         
@@ -201,14 +201,14 @@ export default class ItemListPage extends Page {
         this.searchSection.css('display', 'none')
         this.ponyProfileSection.css('display', 'block')
 
-        console.log('item', itemId, item)
+        console.log('object', itemId, object)
         if (this.category == 'ponies') {
-            document.getElementById('item-profile-portrait-image').src = item.image.portrait
-            document.getElementById('item-profile-description').textContent = item.description[this.language]
+            document.getElementById('object-profile-portrait-image').src = object.image.portrait
+            document.getElementById('object-profile-description').textContent = object.description[this.language]
         }
-        document.getElementById('item-profile-image').src = this.category == 'ponies' ? item.image.full : item.image
-        document.getElementById('item-profile-name').textContent = item.name[this.language]
+        document.getElementById('object-profile-image').src = this.category == 'ponies' ? object.image.full : object.image
+        document.getElementById('object-profile-name').textContent = object.name[this.language]
 
-        return item
+        return object
     }
 }

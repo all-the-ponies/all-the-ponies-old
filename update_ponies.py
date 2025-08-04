@@ -290,7 +290,7 @@ class GetGameData:
                     "ponies": {
                         'name': {},
                         'clones': {},
-                        'items': ponies,
+                        'objects': ponies,
                     }
                 }
             }
@@ -368,10 +368,10 @@ class GetGameData:
         self.categories['ponies'] = {
             'name': self.categories['ponies'].get('name', {}),
             'clones': self.categories['ponies'].get('clones', {}),
-            'items': self.categories['ponies'].get('items', {}),
+            'objects': self.categories['ponies'].get('objects', {}),
         }
 
-        ponies = self.categories['ponies']['items']
+        ponies = self.categories['ponies']['objects']
 
         for hidden_pony in self.gameobjectdata['HiddenPony'].values():
             pony_id = hidden_pony.get('Parent', {}).get('PonyName')
@@ -640,11 +640,11 @@ class GetGameData:
     def get_houses(self):
         self.categories.setdefault('houses', {})
         self.categories['houses'].setdefault('name', {})
-        houses = self.categories['houses'].setdefault('items', {})
+        houses = self.categories['houses'].setdefault('objects', {})
 
         self.categories.setdefault('shops', {})
         self.categories['shops']['name'] = translate('STR_STORE_SHOPS', self.loc_files)
-        shops = self.categories['shops'].setdefault('items', {})
+        shops = self.categories['shops'].setdefault('objects', {})
 
         os.makedirs(os.path.join(self.images_folder, 'houses'), exist_ok = True)
         os.makedirs(os.path.join(self.images_folder, 'shops'), exist_ok = True)
@@ -716,12 +716,12 @@ class GetGameData:
                 visitors = [visitor for visitor in house.get('Visitors', {}).get('Ponies', []) if visitor]
 
                 for visitor in visitors:
-                    if not visitor in self.categories['ponies']['items']:
+                    if not visitor in self.categories['ponies']['objects']:
                         if visitor:
                             console.log(f'house {house.id} has nonexistent visitor "{visitor}"')
                         continue
                     
-                    inns = self.categories['ponies']['items'][visitor].setdefault('inns', [])
+                    inns = self.categories['ponies']['objects'][visitor].setdefault('inns', [])
                     if house.id not in inns:
                         inns.append(house.id)
                 
@@ -733,7 +733,7 @@ class GetGameData:
                     console.print(f'[red]Shop {house.id} has residents[/]')
                 
                 if (house_info['location'] == 'UNKNOWN' and len(house_info['residents'])):
-                    house_info['location'] = self.categories['ponies']['items'][house_info['residents'][0]]['location']
+                    house_info['location'] = self.categories['ponies']['objects'][house_info['residents'][0]]['location']
                     console.log(f'found location {house_info["location"]}')
 
                 if is_shop:
@@ -933,11 +933,11 @@ def main():
 
     # Gather prize types
 
-    prizetypes_info = game_info.setdefault('items', {})
+    prizetypes_info = game_info.setdefault('objects', {})
     with open(os.path.join(game_folder, 'prizetype.json'), 'r') as file:
         prizetypes = json.load(file)
     
-    os.makedirs(os.path.join(ASSETS_FOLDER, 'images', 'items'), exist_ok = True)
+    os.makedirs(os.path.join(ASSETS_FOLDER, 'images', 'objects'), exist_ok = True)
     for prize, prize_id in PRIZE_TYPES.items():
         if prize not in prizetypes['PrizeData']:
             prize_obj = gameobjectdata.get_object(prize)
@@ -953,7 +953,7 @@ def main():
             prize_game_info = prizetypes['PrizeData'][prize]
         
         image = crop_image(Image.open(os.path.join(game_folder, prize_game_info['image'])))
-        prize_image_path = os.path.join(ASSETS_FOLDER, 'images', 'items', f'{prize_id}.png')
+        prize_image_path = os.path.join(ASSETS_FOLDER, 'images', 'objects', f'{prize_id}.png')
         image.save(prize_image_path)
         
         prize_info = {

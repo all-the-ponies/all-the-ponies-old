@@ -100,7 +100,7 @@ export default class Quiz extends Page {
         let name = gameData.transformName(this.nameInput.val(), this.options)
         if (name in this.ponyInfo.namesMap || name in this.ponyInfo.altNames) {
             let foundPony = name in this.ponyInfo.altNames ? this.ponyInfo.altNames[name] : this.ponyInfo.namesMap[name]
-            pony = gameData.getItem(foundPony.id, 'ponies', foundPony.name)
+            pony = gameData.getObject(foundPony.id, 'ponies', foundPony.name)
         }
 
         if (pony == null) {

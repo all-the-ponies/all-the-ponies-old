@@ -129,7 +129,7 @@ export default class GameData {
 
     updatePonies() {
         for (let category of Object.values(this.categories)) {
-            for (let [id, item] of Object.entries(category.items)) {
+            for (let [id, item] of Object.entries(category.objects)) {
                 item.id = id
             }
         }
@@ -137,7 +137,7 @@ export default class GameData {
         
         this.ponies = {}
 
-        for (let [ponyId, ponyInfo] of Object.entries(this.gameData.categories.ponies.items)) {
+        for (let [ponyId, ponyInfo] of Object.entries(this.gameData.categories.ponies.objects)) {
             
             let searchNames = [
                 this.transformName(
@@ -202,7 +202,7 @@ export default class GameData {
         let transformedName = this.transformName(name)
         if (transformedName in this.filteredPonyNameMap || transformedName in this.filteredAltPonyNames) {
             let pony = transformedName in this.filteredAltPonyNames ? this.filteredAltPonyNames[transformedName] : this.filteredPonyNameMap[transformedName]
-            return this.getItem(pony.id, 'ponies', pony.name)
+            return this.getObject(pony.id, 'ponies', pony.name)
         }
 
         return null
@@ -213,11 +213,11 @@ export default class GameData {
             throw RangeError(`Category ${category} does not exist`)
         }
         
-        const items = this.categories[category].items
+        const objects = this.categories[category].objects
 
         name = this.transformName(name)
         if (name == '') {
-            return Object.keys(items)
+            return Object.keys(objects)
         }
         let result = []
 
@@ -227,7 +227,7 @@ export default class GameData {
             }
         }
 
-        for (let item of Object.values(items)) {
+        for (let item of Object.values(objects)) {
             if (this.transformName(fixName(item.name[this.language])).includes(name)) {
                 addResult(item.id)
             } else if (item.alt_name && item.alt_name[this.language] && item.alt_name[this.language].some((searchName) => this.transformName(fixName(searchName)).includes(name))) {
@@ -239,12 +239,12 @@ export default class GameData {
         return result
     }
 
-    getItem(id, category = 'ponies', usedName = null) {
-        if (!this.categories[category]?.items[id]) {
+    getObject(id, category = 'ponies', usedName = null) {
+        if (!this.categories[category]?.objects[id]) {
             return null
         }
         return {
-            ...structuredClone(this.categories[category]?.items[id]),
+            ...structuredClone(this.categories[category]?.objects[id]),
             usedName: usedName,
         }
     }
