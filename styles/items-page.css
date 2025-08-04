@@ -34,17 +34,17 @@
 
 /* pony profile */
 
-#item-profile {
+#object-profile {
     display: none; /* set to block in js */
 }
 
-#item-profile h1 {
+#object-profile h1 {
     display: flex;
     align-items: center;
     gap: 0.2em;
 }
 
-#item-profile-portrait-image {
+#object-profile-portrait-image {
     height: 1em;
 }
 
