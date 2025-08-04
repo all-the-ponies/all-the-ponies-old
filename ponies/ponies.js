@@ -1,4 +1,4 @@
-import { createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
+import { createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
 import '../scripts/jquery-3.7.1.min.js'
 
 import ObjectListPage from "../scripts/components/object-list-page.js";
@@ -9,13 +9,13 @@ export default class Ponies extends ObjectListPage {
 
 
     async showItemProfile(ponyId) {
-        let pony = super.showItemProfile(ponyId)
+        let pony = await super.showItemProfile(ponyId)
 
         this.ponyProfileSection.find('[data-object-info="level"]').text(pony.unlock_level)
         this.ponyProfileSection.find('[data-object-info="town"]').text(toTitleCase(LOC.translate(pony.location)))
         this.ponyProfileSection.find('[data-object-info="arrival-bonus"]').text(pony.arrival_xp)
         this.ponyProfileSection.find('[data-object-info="House"]').text(pony.house)
-        this.ponyProfileSection.find('[data-object-info="minigame-cooldown"]').text(pony.minigame.cooldown + 's')
+        this.ponyProfileSection.find('[data-object-info="minigame-cooldown"]').text(formatTime(pony.minigame.cooldown))
         this.ponyProfileSection.find('[data-object-info="minigame-skip-cost"]').text(pony.minigame.skip_cost)
 
         return
