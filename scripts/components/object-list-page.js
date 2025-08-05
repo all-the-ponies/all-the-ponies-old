@@ -57,7 +57,7 @@ export default class ObjectListPage extends Page {
         }
 
         // if (!this.searchCreated) {
-            this.createSearchCards()
+        await this.createSearchCards()
         // }
 
         if (this.currentScreen == 'search') {
