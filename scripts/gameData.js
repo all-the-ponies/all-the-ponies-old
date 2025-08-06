@@ -214,7 +214,7 @@ export default class GameData {
         }
         
         const objects = this.categories[category].objects
-
+        const originalName = name
         name = this.transformName(name)
         if (name == '') {
             return Object.keys(objects)
@@ -233,9 +233,9 @@ export default class GameData {
             } else if (item.alt_name && item.alt_name[this.language] && item.alt_name[this.language].some((searchName) => this.transformName(fixName(searchName)).includes(name))) {
                 addResult(item.id)
             }
-            //  else if (this.transformName(item.id).includes(name)) {
-            //     addResult(item.id)
-            // }
+             else if (item.id == originalName) {
+                addResult(item.id)
+            }
         }
         return result
     }
