@@ -232,9 +232,10 @@ export default class GameData {
                 addResult(item.id)
             } else if (item.alt_name && item.alt_name[this.language] && item.alt_name[this.language].some((searchName) => this.transformName(fixName(searchName)).includes(name))) {
                 addResult(item.id)
-            } else if (this.transformName(item.id).includes(name)) {
-                addResult(item.id)
             }
+            //  else if (this.transformName(item.id).includes(name)) {
+            //     addResult(item.id)
+            // }
         }
         return result
     }
