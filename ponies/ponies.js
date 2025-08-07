@@ -10,13 +10,15 @@ export default class Ponies extends ObjectListPage {
 
     async showObjectProfile(ponyId) {
         let pony = await super.showObjectProfile(ponyId)
+        const house = gameData.getObject(pony.house)
 
-        this.objectProfileSection.find('[data-object-info="level"]').text(pony.unlock_level)
-        this.objectProfileSection.find('[data-object-info="town"]').text(toTitleCase(LOC.translate(pony.location)))
-        this.objectProfileSection.find('[data-object-info="arrival-bonus"]').text(pony.arrival_xp)
-        this.objectProfileSection.find('[data-object-info="House"]').text(pony.house)
-        this.objectProfileSection.find('[data-object-info="minigame-cooldown"]').text(formatTime(pony.minigame.cooldown))
-        this.objectProfileSection.find('[data-object-info="minigame-skip-cost"]').text(pony.minigame.skip_cost)
+        document.querySelector('[data-object-info="level"]').textContent = pony.unlock_level
+        document.querySelector('[data-object-info="town"]').textContent = toTitleCase(LOC.translate(pony.location))
+        document.querySelector('[data-object-info="arrival-bonus"]').textContent = pony.arrival_xp
+        document.querySelector('[data-object-info="House"]').textContent = app.translate(house.name)
+        document.querySelector('[data-object-info="House"]').href = house.category == 'houses' ? `/houses/?house=${house.id}` : `/shops/?shop=${house.id}`
+        document.querySelector('[data-object-info="minigame-cooldown"]').textContent = formatTime(pony.minigame.cooldown)
+        document.querySelector('[data-object-info="minigame-skip-cost"]').textContent = pony.minigame.skip_cost
 
         let starRewardsElement = this.objectProfileSection.find('[data-object-info="star-rewards"]')
         let starRewardsBar = starRewardsElement.find('.star-rewards-bar')

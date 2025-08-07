@@ -155,6 +155,7 @@ class App {
             } else {
                 if (this.currentRoute) this.currentRoute.running = false
                 route.running = true
+                window.scrollTo(0,0)
                 route.load()
             }
             this.currentPage = path
