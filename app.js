@@ -8,6 +8,8 @@ import Houses from "./houses/houses.js"
 import Shops from "./shops/shops.js"
 import Quiz from "./quiz/quiz.js"
 
+import './scripts/components/game-object.js'
+
 import { linkHandler, setURL } from "./scripts/common.js"
 
 window.LOC = new Localization('/assets/json/localization.json')

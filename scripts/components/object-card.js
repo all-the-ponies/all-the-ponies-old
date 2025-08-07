@@ -1,23 +1,25 @@
-import { createElement, linkHandler } from "../common.js"
+import { checkVisible, createElement, linkHandler } from "../common.js"
 import { setURL } from "../common.js"
 
 
-const CardObserver = new IntersectionObserver((elements) => {
-    elements.forEach(element => {
-        element.target.load()
+const cardLoader = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        console.log('intersectionRatio', entry.isIntersecting)
+        if (entry.isIntersecting) {
+            entry.target.load()
+            cardLoader.unobserve(entry.target)
+        }
     });
 }, {
     root: null,
-    rootMargin: '20px',
-    threshold: 0.5,
+    rootMargin: '50px',
+    threshold: 0,
 })
 
 
 class ObjectCard extends HTMLElement {
     constructor() {
         super()
-
-        CardObserver.observe(this)
 
         this.loaded = false
 
@@ -38,9 +40,11 @@ class ObjectCard extends HTMLElement {
         image.classList.add('item-image')
         image.id = 'item-image'
         image.loading = 'lazy'
+        image.style.visibility = 'hidden'
 
         image.addEventListener('load', () => {
             this.loaded = true
+            image.style.visibility = 'visible'
         })
 
         image.addEventListener('error', () => {
@@ -48,8 +52,6 @@ class ObjectCard extends HTMLElement {
                 return
             }
             image.src = this.getAttribute('image-placeholder')
-
-            this.loaded = true
         })
 
         const style = document.createElement('style')
@@ -136,7 +138,12 @@ class ObjectCard extends HTMLElement {
     }
 
     connectedCallback() {
+        cardLoader.observe(this)
         this.updateElement()
+    }
+
+    disconnectedCallback() {
+        cardLoader.unobserve(this)
     }
 
     static get observedAttributes() {

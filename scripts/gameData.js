@@ -240,13 +240,34 @@ export default class GameData {
         return result
     }
 
-    getObject(id, category = 'ponies', usedName = null) {
+    getObject(id, category = null, usedName = null) {
+        if (category === null) {
+            for (const c of Object.keys(this.categories)) {
+                let object = this.getObject(id, c, usedName)
+                if (object != null) {
+                    return object
+                }
+            }
+            return null
+        }
         if (!this.categories[category]?.objects[id]) {
+            if (category == 'items') {
+                for (const item of Object.values(this.categories[category].objects)) {
+                    if (item.alt_ids.includes(id)) {
+                        return {
+                            ...structuredClone(item),
+                            usedName: usedName,
+                            category: category,
+                        }
+                    }
+                }
+            }
             return null
         }
         return {
             ...structuredClone(this.categories[category]?.objects[id]),
             usedName: usedName,
+            category: category,
         }
     }
 }

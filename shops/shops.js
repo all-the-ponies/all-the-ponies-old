@@ -7,8 +7,8 @@ export default class Shops extends ItemListPage {
     category = 'shops'
     parameter = 'shop'
 
-    async showItemProfile(itemId) {
-        const object = await super.showItemProfile(itemId)
+    async showObjectProfile(itemId) {
+        const object = await super.showObjectProfile(itemId)
 
         console.log('showing', object)
 
@@ -25,6 +25,7 @@ export default class Shops extends ItemListPage {
         document.querySelector('[data-object-info="product-image"]').alt = app.translate(object.product.name)
         document.querySelector('[data-object-info="production-time"]').textContent = formatTime(object.product.time)
         document.querySelector('[data-object-info="profit"]').textContent = object.product.bits || object.product.gems
+        document.querySelector('[data-object-info="profit-currency"]').setAttribute('object-id', object.product.gems ? 'Gems' : 'Bits')
         document.querySelector('[data-object-info="product-xp"]').textContent = object.product.xp
         document.querySelector('[data-object-info="product-skip"]').textContent = object.product.skip_cost
     }

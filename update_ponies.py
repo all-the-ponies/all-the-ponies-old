@@ -307,6 +307,8 @@ class GetGameData:
 
         self.get_ponies()
         self.get_houses()
+        self.get_tokens()
+        self.get_items()
 
         console.print('saving game data')
         with open(self.output_game_data, 'w', encoding = 'utf-8') as file:
@@ -755,7 +757,7 @@ class GetGameData:
                         image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'products', f'{consumable.id}.png')))
                         product['image'] = '/' + image_path
 
-                        image_name = os.path.splitext(house.get('Shop', {}).get('Icon'))[0]
+                        image_name = os.path.splitext(consumable.get('Graphic', {}).get('Sprite'))[0]
                         image_source = os.path.join(self.game_folder, image_name)
 
                         if not self.no_images:
@@ -831,7 +833,83 @@ class GetGameData:
             except Exception as e:
                 e.add_note(f'house id: {house.id}')
                 raise e
+    
+    def get_tokens(self):
+        self.categories.setdefault('tokens', {})
+        self.categories['tokens']['name'] = translate(
+            'STR_HELP_PONY_TASKS_TASKS',
+            self.loc_files,
+            self.categories['tokens'].get('name', {}),
+        )
+        tokens = self.categories['tokens'].setdefault('objects', {})
 
+        os.makedirs(os.path.join(self.images_folder, 'tokens'), exist_ok = True)
+
+        for index, token in track(
+            enumerate(self.gameobjectdata['QuestSpecialItem'].values()),
+            description = 'Getting tokens...',
+        ):
+            token_info = tokens.setdefault(token.id, {})
+            
+            token_info.setdefault('locked', False)
+            token_info['index'] = index
+
+            QuestSpecialItem = token.get('QuestSpecialItem', {})
+
+            token_info['name'] = translate(
+                QuestSpecialItem.get('Name', token.id),
+                self.loc_files,
+                token_info.get('name', {}),
+                token_info.get('locked', False),
+            )
+
+            image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'tokens', f'{token.id}.png')))
+            token_info['image'] = '/' + image_path
+        
+            image_name = os.path.splitext(QuestSpecialItem.get('Icon', ''))[0]
+            image_source = os.path.join(self.game_folder, image_name)
+
+            if not self.no_images:
+                self.save_image(image_source, image_path)
+
+            token_info['chance'] = QuestSpecialItem.get('Chance', 0) / 100
+            token_info['tasks'] = QuestSpecialItem.get('PonyTasks', [])
+
+            token_info['unlimited'] = bool(token.get('SaveSettings', {}).get('IsUnlimited', 0))
+            token_info['no_reset'] = bool(token.get('SaveSettings', {}).get('DisableReset', 0))
+            
+
+    def get_items(self):
+        self.categories.setdefault('items', {})
+        self.categories['items'].setdefault('name', {})
+        items = self.categories['items'].setdefault('objects', {})
+
+        with self.get_game_file('prizetype.json', 'r') as file:
+            prizetypes: dict[str, dict[str, dict[str, str]]] = json.load(file)
+        
+        os.makedirs(os.path.join(self.images_folder, 'items'), exist_ok = True)
+
+        for id, config in prizetypes.get('PrizeData', {}).items():
+            item = items.setdefault(id, {})
+            item['name'] = translate(
+                config['loc_string'],
+                self.loc_files,
+                item.get('name', {}),
+            )
+
+            item.setdefault('image', None)
+
+            if config.get('image'):
+                image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'items', f'{id}.png')))
+                item['image'] = '/' + image_path
+            
+                image_name = os.path.splitext(config['image'])[0]
+                image_source = os.path.join(self.game_folder, image_name)
+
+                if not self.no_images:
+                    self.save_image(image_source, image_path)
+            
+            item['alt_ids'] = prizetypes['PrizeStrings'].get(id, [])
 
 
 def main():

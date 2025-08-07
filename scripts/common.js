@@ -171,6 +171,13 @@ export function createElement(tagName, attrs = {}, children = []) {
   return element
 }
 
+// Taken from https://stackoverflow.com/a/5354536/17129659 by Tokimon
+export function checkVisible(elm) {
+  var rect = elm.getBoundingClientRect();
+  var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+  return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
+
 
 export function formatTime(time) {
   if (Math.trunc(time) == 0) return "0s";

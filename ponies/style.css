@@ -34,9 +34,9 @@
 
 /* pony profile */
 
-#pony-profile {
+/* #object-profile {
     display: none; /* set to block in js */
-}
+} */
 
 #pony-profile h1 {
     display: flex;

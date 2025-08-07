@@ -13,7 +13,7 @@ export default class ObjectListPage extends Page {
 
 
         this.searchSection = $('#search-section')
-        this.ponyProfileSection = $('#pony-profile')
+        this.objectProfileSection = $('#object-profile')
         this.searchBar = $('#search-bar')
         this.searchResultsElement = $('#search-results')
 
@@ -46,8 +46,9 @@ export default class ObjectListPage extends Page {
         
         if (selectedPony) {
             this.currentScreen = 'itemProfile'
-            this.showItemProfile(selectedPony)
+            this.showObjectProfile(selectedPony)
         } else {
+            this.objectProfileSection.css('display', 'none')
             this.currentScreen = 'search'
         }
 
@@ -76,7 +77,7 @@ export default class ObjectListPage extends Page {
             screen = 'itemProfile'
             
             scrollTo({top: 0})
-            this.showItemProfile(getUrlParameter(this.parameter))
+            this.showObjectProfile(getUrlParameter(this.parameter))
         }
         
         this.currentScreen = screen
@@ -103,12 +104,12 @@ export default class ObjectListPage extends Page {
     showSearch() {
         this.currentScreen = 'search'
         this.searchSection.css('display', 'block')
-        this.ponyProfileSection.css('display', 'none')
+        this.objectProfileSection.css('display', 'none')
     }
 
     async createSearchCards() {
         const waitForNextTask = () => {
-        const { port1, port2 } = waitForNextTask.channel ??= new MessageChannel();
+            const { port1, port2 } = waitForNextTask.channel ??= new MessageChannel();
             return new Promise( (res) => {
                 port1.addEventListener("message", () => res(), { once: true } );
                 port1.start();
@@ -191,7 +192,7 @@ export default class ObjectListPage extends Page {
         })
     }
 
-    async showItemProfile(itemId) {
+    async showObjectProfile(itemId) {
         const object = gameData.getObject(itemId, this.category)
         
         $('.to-search').attr('href', `?q=${encodeURI(this.searchBar.val())}`)
@@ -199,7 +200,7 @@ export default class ObjectListPage extends Page {
         this.currentScreen = 'itemProfile'
 
         this.searchSection.css('display', 'none')
-        this.ponyProfileSection.css('display', 'block')
+        this.objectProfileSection.css('display', 'block')
 
         console.log('object', itemId, object)
         if (this.category == 'ponies') {

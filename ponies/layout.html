@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="/styles/items-page.css">
-<link rel="stylesheet" href="style.css">
+<!-- <link rel="stylesheet" href="style.css"> -->
 
 <div id="search-section">
     <div class="search-container">
@@ -8,7 +8,7 @@
     </div>
     <section id="search-results"></section>
 </div>
-<div id="pony-profile">
+<div id="object-profile">
     <div>
         <a href="" class="to-search">BAck</a>
         <h1>
@@ -38,8 +38,10 @@
                 </tr>
                 <tr>
                     <td>Arrival Bonus</td>
-                    <td><span data-object-info="arrival-bonus">0</span> <img class="item"
-                            src="/assets/images/items/XP.png" alt=""></td>
+                    <td>
+                        <span data-object-info="arrival-bonus">0</span>
+                        <object-image class="item" object-id="XP" />
+                    </td>
                 </tr>
                 <tr>
                     <td>House</td>
@@ -51,8 +53,10 @@
                 </tr>
                 <tr>
                     <td>Minigame Skip Cost</td>
-                    <td><span data-object-info="minigame-skip-cost">0</span> <img class="item"
-                            src="/assets/images/items/Gems.png" alt=""></td>
+                    <td>
+                        <span data-object-info="minigame-skip-cost">0</span>
+                        <object-image class="item" object-id="Gems" />
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="table-header">Level Up Rewards</td>
@@ -62,16 +66,21 @@
                         <div class="star-rewards" data-object-info="star-rewards">
                             <span class="none-star-rewards">None</span>
                             <div class="star-rewards-bar" data-stars="4">
-                                <div class="star-reward"><img src="/assets/images/items/Minecart_Wheel.png"
-                                        alt="Minecart Wheel" title="Minecart Wheel"></div>
-                                <div class="star-reward"><img src="/assets/images/items/Minecart_Wheel.png"
-                                        alt="Minecart Wheel" title="Minecart Wheel"></div>
-                                <div class="star-reward"><img src="/assets/images/items/Minecart_Wheel.png"
-                                        alt="Minecart Wheel" title="Minecart Wheel"></div>
-                                <div class="star-reward"><img src="/assets/images/items/Minecart_Wheel.png"
-                                        alt="Minecart Wheel" title="Minecart Wheel"></div>
-                                <div class="star-reward"><img src="/assets/images/items/Minecart_Wheel.png"
-                                        alt="Minecart Wheel" title="Minecart Wheel"></div>
+                                <div class="star-reward">
+                                    <object-image object-id="wheel_starmastery" />
+                                </div>
+                                <div class="star-reward">
+                                    <object-image object-id="wheel_starmastery" />
+                                </div>
+                                <div class="star-reward">
+                                    <object-image object-id="wheel_starmastery" />
+                                </div>
+                                <div class="star-reward">
+                                    <object-image object-id="wheel_starmastery" />
+                                </div>
+                                <div class="star-reward">
+                                    <object-image object-id="wheel_starmastery" />
+                                </div>
                             </div>
                         </div>
                     </td>

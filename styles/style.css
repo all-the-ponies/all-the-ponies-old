@@ -570,3 +570,13 @@ main {
     background-color: var(--light-blue);
     left: calc(100% - 5px);
 }
+
+/* just a test to recreate the avatar shop images */
+.avatar-shop {
+    background: #FEF1CE;
+    padding: 0.2em;
+    padding-bottom: 0.6em;
+    display: inline-block;
+    outline: 2px solid white;
+    transform: rotate(-10deg) skew(1deg, 0deg);
+}
