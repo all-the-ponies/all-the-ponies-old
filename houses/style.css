@@ -8,8 +8,8 @@
     width: 5rem;
     height: 5rem;
 
-    border: 2px solid white;
-    border-radius: 50rem;
+    /* border: 2px solid white;
+    border-radius: 50rem; */
 }
 
 [data-object-info="residents"] > .resident > object-image {
