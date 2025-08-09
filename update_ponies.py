@@ -690,10 +690,10 @@ class GetGameData:
                 image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'shops' if is_shop else 'houses', f'{house.id}.png')))
                 house_info['image'] = '/' + image_path
 
-                image_name = os.path.splitext(house.get('Shop', {}).get('Icon'))[0]
+                image_name = os.path.splitext(house.get('Icon', {}).get('BookIcon'))[0]
                 image_source = os.path.join(self.game_folder, image_name)
                 if not os.path.isfile(image_source + '.png') and not os.path.isfile(image_source + '.pvr'):
-                    image_name = os.path.splitext(house.get('Icon', {}).get('BookIcon'))[0]
+                    image_name = os.path.splitext(house.get('Shop', {}).get('Icon'))[0]
                     image_source = os.path.join(self.game_folder, image_name)
 
                 if not self.no_images:
