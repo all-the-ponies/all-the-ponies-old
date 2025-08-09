@@ -1,0 +1,96 @@
+<link rel="stylesheet" href="/styles/items-page.css">
+<link rel="stylesheet" href="style.css">
+
+<div id="search-section">
+    <div class="search-container">
+        <label for="search-bar">Search</label>
+        <input class="search-box" type="search" name="search-bar" id="search-bar" placeholder="Decor" />
+    </div>
+    <section id="search-results"></section>
+</div>
+<div id="object-profile">
+    <div>
+        <a href="" class="to-search">Back</a>
+        <h1>
+            <span id="object-profile-name">Pony Name</span>
+        </h1>
+        <img id="object-profile-image" src="/assets/images/ponies/full/Pony_Placeholder.png" alt="">
+    </div>
+    <div class="object-profile-info">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Town</td>
+                    <td data-object-info="town">Ponyville</td>
+                </tr>
+                <tr>
+                    <td>Unlock Level</td>
+                    <td data-object-info="unlock-level">0</td>
+                </tr>
+                <tr data-object-info="purchase-limit-row">
+                    <td>Purchase Limit</td>
+                    <td data-object-info="purchase-limit">0</td>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td data-object-info="grid-size">4x4</td>
+                </tr>
+                <tr>
+                    <td>XP</td>
+                    <td>
+                        <span data-object-info="xp">0</span>
+                        <object-image class="item" object-id="XP" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Fusion Points</td>
+                    <td data-object-info="fusion-points">0</td>
+                </tr>
+                <tr class="object-profile-pro-decor">
+                    <td colspan="2">Pro Decor</td>
+                </tr>
+                <tr class="object-profile-pro-decor">
+                    <td>Size</td>
+                    <td data-object-info="pro-decor-size">3</td>
+                </tr>
+                <tr class="object-profile-pro-decor">
+                    <td>Effect</td>
+                    <td>
+                        <span data-object-info="pro-percent">0</span>
+                        <img class="item" data-object-info="pro-type" src="" alt="" loading="lazy">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<dialog id="options-dialog" class="dialog">
+    <h1 class="dialog-header">Options</h1>
+    <div class="dialog-body">
+        <form action="dialog">
+            <div class="form-options">
+                <!-- <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
+                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
+                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
+                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div> -->
+            </div>
+            <div class="dialog-confirmation">
+                <button class="button-red" type="submit" value="cancel" formmethod="dialog">Cancel</button>
+                <button class="button-green" type="submit" value="ok" formmethod="dialog">OK</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<template id="pony-card">
+    <style>
+
+    </style>
+    <div class="pony-card">
+        <div class="pony-name">Pony name</div>
+        <div class="pony-card-body">
+            <img class="pony-image" src="/assets/images/ponies/shop/Pony_Placeholder.png" alt="">
+        </div>
+    </div>
+</template>

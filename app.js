@@ -6,6 +6,7 @@ import Index from "./index.js"
 import Ponies from "./ponies/ponies.js"
 import Houses from "./houses/houses.js"
 import Shops from "./shops/shops.js"
+import Decor from "./decor/decor.js"
 import Quiz from "./quiz/quiz.js"
 
 import './scripts/components/game-object.js'
@@ -98,6 +99,7 @@ class App {
         '/ponies/': new Ponies(),
         '/houses/': new Houses(),
         '/shops/': new Shops(),
+        '/decor/': new Decor(),
         '/quiz/': new Quiz(),
     }
 
@@ -106,6 +108,7 @@ class App {
             ['/ponies/', gameData.categories.ponies.name],
             ['/houses/', gameData.categories.houses.name],
             ['/shops/', gameData.categories.shops.name],
+            ['/decor/', gameData.categories.decor.name],
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
         ]

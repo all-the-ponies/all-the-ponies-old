@@ -307,6 +307,7 @@ class GetGameData:
 
         self.get_ponies()
         self.get_houses()
+        self.get_decorations()
         self.get_tokens()
         self.get_items()
 
@@ -834,6 +835,100 @@ class GetGameData:
                 e.add_note(f'house id: {house.id}')
                 raise e
     
+    def get_decorations(self):
+        self.categories.setdefault('decor', {})
+        self.categories['decor']['name'] = translate(
+            'STR_STORE_DECOR',
+            self.loc_files,
+            self.categories['decor'].get('name', {}),
+        )
+        decors = self.categories['decor'].setdefault('objects', {})
+
+        os.makedirs(os.path.join(self.images_folder, 'decor'), exist_ok = True)
+        for index, decor in track(
+            enumerate(self.gameobjectdata['Decore'].values()),
+            description = 'Getting decor...',
+            total = len(self.gameobjectdata['Decore']),
+        ):
+            decor_info = decors.setdefault(decor.id, {})
+            decor_info.setdefault('locked', False)
+            decor_info['index'] = index
+
+            
+            decor_info['name'] = translate(
+                decor.get('Name', {}).get('Unlocal', decor.id),
+                self.loc_files,
+                decor_info.get('name', {}),
+                decor_info.get('locked', False),
+            )
+
+            image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'decor', f'{decor.id}.png')))
+            decor_info['image'] = '/' + image_path
+
+            image_name = os.path.splitext(decor.get('Shop', {}).get('Icon'))[0]
+            image_source = os.path.join(self.game_folder, image_name)
+
+            if not self.no_images:
+                self.save_image(image_source, image_path)
+            
+            
+            shopdata = self.gameobjectdata.get_object_shopdata(decor.id)
+            if shopdata is None:
+                console.log(f'shopdata not found {decor.id}')
+                decor_info['location'] = 'UNKNOWN'
+                decor_info.setdefault('unlock_level', 0)
+            else:
+                # house_info['location'] = shopdata.get('MapZone', -1)
+                decor_info['location'] = LOCATIONS.get(
+                    strToInt(shopdata.get('MapZone', -1)),
+                    'UNKNOWN',
+                )
+                decor_info['unlock_level'] = shopdata.get('UnlockValue', 0)
+            
+            decor_info['limit'] = decor.get('Shop', {}).get('PurchaseLimit', 0)
+            decor_info['grid_size'] = decor.get('GridData', {}).get('Size', 0) // 2
+
+            decor_info['xp'] = decor.get('OnPurchase', {}).get('EarnXP', 0)
+
+            cost = decor_info.setdefault('cost', {})
+
+            cost.setdefault('base', {
+                'currency': '',
+                'amount': 0,
+            })
+            cost.setdefault('actual', {
+                'currency': '',
+                'amount': 0,
+            })
+            cost.setdefault('token', {
+                'id': '',
+                'amount': 0,
+            })
+
+            if shopdata is not None:
+                cost['base'] = {
+                    'currency': CURRENCY.get(shopdata.get('CurrencyType', 0), ''),
+                    'amount': shopdata.get('Cost', 0),
+                }
+                cost.setdefault('actual', cost['base'])
+                cost['token']['id'] = shopdata.get('TaskTokenID', '')
+
+            decor_info['fusion_points'] = 0
+            pro = decor_info.setdefault('pro', {})
+            pro['is_pro'] = bool(decor.get('ProDecoration', {}).get('IsProDecore', 0))
+            pro['size'] = decor.get('ProDecoration', {}).get('GridSizeBonus', 0)
+            pro['time'] = decor.get('ProDecoration', {}).get('TimeBonusPercent', 0)
+            pro['bits'] = decor.get('ProDecoration', {}).get('BitsBonusPercent', 0)
+
+
+        fusion_data = json.load(self.get_game_file('decoration_fusion_val.json'))
+        for decor in fusion_data['DecoreList']:
+            if decor['id'] not in decors:
+                console.print(f'decor {decor["id"]} not found')
+                continue
+            decors[decor['id']]['fusion_points'] = decor['val']
+
+    
     def get_tokens(self):
         self.categories.setdefault('tokens', {})
         self.categories['tokens']['name'] = translate(
@@ -848,6 +943,7 @@ class GetGameData:
         for index, token in track(
             enumerate(self.gameobjectdata['QuestSpecialItem'].values()),
             description = 'Getting tokens...',
+            total = len(self.gameobjectdata['QuestSpecialItem']),
         ):
             token_info = tokens.setdefault(token.id, {})
             
