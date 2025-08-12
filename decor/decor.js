@@ -1,16 +1,21 @@
-import { createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
-import '../scripts/jquery-3.7.1.min.js'
+import { CATEGORIES, createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
+import ObjectProfilePage from "../scripts/object-profile.js";
 
-import ObjectListPage from "../scripts/components/object-list-page.js"
-
-export default class Decor extends ObjectListPage {
+export default class DecorPage extends ObjectProfilePage {
     category = 'decor'
-    parameter = 'decor'
 
-    async showObjectProfile(decorId) {
-        const decor = await super.showObjectProfile(decorId)
+    async createProfile() {
+        await super.createProfile()
+        const decor = this.object
 
-        console.log('decor', decor)
+        if (this.object == null) {
+            return
+        }
+        
+        document.getElementById('object-profile-name').textContent = app.translate(decor.name)
+        document.getElementById('object-profile-image').src = decor.image
+
+
         document.querySelector('[data-object-info="town"]').textContent = toTitleCase(LOC.translate(decor.location))
         document.querySelector('[data-object-info="xp"]').textContent = decor.xp
         document.querySelector('[data-object-info="unlock-level"]').textContent = `${decor.grid_size}x${decor.grid_size}`

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <title>All The Ponies</title>
+    <meta name="apple-mobile-web-app-title" content="Ponies" />
+    <meta name="description" content="Every single pony in the My Little Pony gameloft mobile game">
+    <meta name="keywords" content="my little pony,mlp,pony,ponies,quiz,names,name,gameloft,magic princess,g4,friendship is magic,fim">
+
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <!-- <link rel="icon" type="image/svg+xml" href="./favicon/favicon.svg" /> -->
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <meta property="og:image" content="/favicon/favicon.png" />
+
+    <link rel="stylesheet" href="/styles/style.css">
+
+    <script type="module" src="/app.js" defer></script>
+</head>
+<body>
+    <progress min="0" value="0" id="loading-bar">0%</progress>
+    <header>
+        <aside class="header">
+            <div class="title-bar">
+                <label for="sidebar-toggle" class="sidebar-toggle">
+                    <input type="checkbox" name="sidebar-toggle" id="sidebar-toggle">
+                    <label for="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></label>
+                </label>
+                <div>
+                    <h1><a href="/">All The Ponies</a></h1>
+                    <select name="language" id="language">
+                        <option value="english" selected>English</option>
+                        <option value="arabic">Arabic</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="french">French</option>
+                        <option value="german">German</option>
+                        <option value="italian">Italian</option>
+                        <option value="japanese">Japanese</option>
+                        <option value="korean">Korean</option>
+                        <option value="brazilian portuguese">Brazilian Portuguese</option>
+                        <option value="russian">Russian</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="thai">Thai</option>
+                        <option value="turkish">Turkish</option>
+                    </select>
+                </div>
+            </div>
+            <div class="sidebar">
+                <nav>
+                    <ul id="sidebar-links">
+                    </ul>
+                </nav>
+                <label for="sidebar-toggle" class="sidebar-background"></label>
+            </div>
+        </aside>
+    </header>
+    <main id="page-content" class="page-content"></main>
+    </main>
+</body>
+</html>

@@ -3,8 +3,8 @@ import Page from "../scripts/page.js"
 import '../scripts/jquery-3.7.1.min.js'
 
 export default class Quiz extends Page {
-    async load() {
-        await super.load()
+    async load(path) {
+        await super.load(path)
 
         this.gameBar = $('#game-bar')
         this.nameInput = $('#name-input')
@@ -59,10 +59,17 @@ export default class Quiz extends Page {
         this.bindEventListeners()
     }
 
-    update() {
+    async update(path) {
+        await super.update(path)
+        
+        gameData.language = this.language
         this.ponyInfo = gameData.generateFilteredList(this.options)
         // gameData.update() // We don't need to update because setting the language already updates
         this.updateProgress()
+    }
+
+    async unload(path) {
+        this.stop()
     }
 
     get language() {

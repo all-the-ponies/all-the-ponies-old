@@ -1,16 +1,22 @@
-import { createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
-import '../scripts/jquery-3.7.1.min.js'
+import { CATEGORIES, createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
+import ObjectProfilePage from "../scripts/object-profile.js";
 
-import ObjectListPage from "../scripts/components/object-list-page.js"
-
-export default class Houses extends ObjectListPage {
+export default class HousePage extends ObjectProfilePage {
     category = 'houses'
-    parameter = 'house'
 
-    async showObjectProfile(houseId) {
-        const house = await super.showObjectProfile(houseId)
+    async createProfile() {
+        await super.createProfile()
+        const pony = this.object
 
-        console.log('house', house)
+        if (this.object == null) {
+            return
+        }
+
+        const house = this.object
+
+        document.getElementById('object-profile-name').textContent = app.translate(house.name)
+        document.getElementById('object-profile-image').src = house.image
+
         document.querySelector('[data-object-info="town"]').textContent = toTitleCase(LOC.translate(house.location))
         document.querySelector('[data-object-info="grid-size"]').textContent = `${house.grid_size}x${house.grid_size}`
         document.querySelector('[data-object-info="build-time"]').textContent = formatTime(house.build.time)
@@ -25,7 +31,7 @@ export default class Houses extends ObjectListPage {
                 createElement(
                     'a',
                     {
-                        href: `/ponies/?pony=${pony}`,
+                        href: `/pony/${pony}/`,
                         class: 'resident',
                     },
                     [

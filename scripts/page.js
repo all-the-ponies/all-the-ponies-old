@@ -1,4 +1,6 @@
 export default class Page {
+    layout = 'layout.html'
+
     constructor() {
         this.running = false
         
@@ -10,15 +12,22 @@ export default class Page {
         return this.languageSelector.value
     }
 
-    async load() {
-        const response = await fetch('layout.html')
+    async load(path) {
+        this.running = true
+        const response = await fetch(this.layout)
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
 
         const text = await response.text()
         this.content.innerHTML = text
+        window.scrollTo(0,0)
     }
-    async reload() {}
-    async update() {}
+    async reload(path) {
+        window.scrollTo(0,0)
+    }
+    async update(path) {}
+    async unload(path) {
+        this.running = false
+    }
 }

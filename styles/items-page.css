@@ -170,3 +170,19 @@
     height: 100%;
     display: block;
 }
+
+
+/* search options */
+
+.search-option {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.2rem;
+}
+
+.search-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}

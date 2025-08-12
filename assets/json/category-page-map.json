@@ -1,0 +1,14 @@
+{
+    "ponies": {
+        "page": "pony"
+    },
+    "houses": {
+        "page": "house"
+    },
+    "shops": {
+        "page": "shop"
+    },
+    "decor": {
+        "page": "decor"
+    }
+}

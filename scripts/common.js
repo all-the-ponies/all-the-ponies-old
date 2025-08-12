@@ -98,6 +98,10 @@ export function scrollIntoViewWithOffset(element, offset, behavior = 'instant') 
   })
 }
 
+export function getCurrentScroll() {
+  return document.documentElement.scrollTop || document.body.scrollTop
+}
+
 export function setURL(url, replace = false) {
     if (history && history.replaceState) {
       if (replace) {
@@ -202,3 +206,6 @@ function truncTime(time, value) {
   time -= value * num;
   return [time, num];
 }
+
+
+export const CATEGORIES = loadJSON('/assets/json/category-page-map.json')

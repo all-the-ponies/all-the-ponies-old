@@ -3,11 +3,13 @@ import GameData from "/scripts/gameData.js"
 import '/scripts/jquery-3.7.1.min.js'
 
 import Index from "./index.js"
-import Ponies from "./ponies/ponies.js"
-import Houses from "./houses/houses.js"
-import Shops from "./shops/shops.js"
-import Decor from "./decor/decor.js"
+import PonyPage from "./pony/pony.js"
+import HousePage from "./house/house.js"
+import ShopPage from "./shop/shop.js"
+import DecorPage from "./decor/decor.js"
 import Quiz from "./quiz/quiz.js"
+import ObjectListPage from "./scripts/components/object-list-page.js"
+import ObjectSearchPage from "./search/search.js"
 
 import './scripts/components/game-object.js'
 
@@ -21,6 +23,8 @@ document.addEventListener('click', linkHandler)
 window.addEventListener('popstate', (e) => {
     window.app.refreshPage()
 })
+
+const searchPage = new ObjectSearchPage()
 
 class App {
     constructor() {
@@ -95,23 +99,42 @@ class App {
     }
 
     routes = {
-        '/': new Index(),
-        '/ponies/': new Ponies(),
-        '/houses/': new Houses(),
-        '/shops/': new Shops(),
-        '/decor/': new Decor(),
-        '/quiz/': new Quiz(),
+        '': new Index(),
+        search: searchPage,
+        ponies: searchPage,
+        houses: searchPage,
+        shops: searchPage,
+
+        pony: new PonyPage(),
+        house: new HousePage(),
+        shop: new ShopPage(),
+        decor: new DecorPage(),
+
+        quiz: new Quiz(),
     }
 
     get sidebar() {
         return [
-            ['/ponies/', gameData.categories.ponies.name],
-            ['/houses/', gameData.categories.houses.name],
-            ['/shops/', gameData.categories.shops.name],
-            ['/decor/', gameData.categories.decor.name],
+            ['/search/ponies/', gameData.categories.ponies.name],
+            ['/search/houses/', gameData.categories.houses.name],
+            ['/search/shops/', gameData.categories.shops.name],
+            ['/search/decor/', gameData.categories.decor.name],
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
         ]
+    }
+
+    get path() {
+        const path = location.pathname.split('/')
+
+        if (path[0] == '') {
+            path.splice(0, 1)
+        }
+        if (path[path.length - 1] == '') {
+            path.splice(path.length - 1, 1)
+        }
+
+        return path
     }
 
     refreshAll(reload = false) {
@@ -121,19 +144,12 @@ class App {
         this.refreshPage(reload)
     }
 
-    refreshPage(reload = false) {
+    async refreshPage(update = false) {
         let url = new URL(location)
 
         let path = url.pathname
 
-        let pathParts = path.split('/')
-
-        if (pathParts[0] == '') {
-            pathParts.splice(0, 1)
-        }
-        if (pathParts[pathParts.length - 1] == '') {
-            pathParts.splice(pathParts.length - 1, 1)
-        }
+        let pathParts = this.path
 
         if (pathParts.length) {
             if (pathParts[pathParts.length - 1].includes('.')) {
@@ -150,20 +166,28 @@ class App {
 
         this.sidebarToggle.checked = false
 
-        if (path in this.routes) {
-            let route = this.routes[path]
-            if (path == this.currentPage) {
+        if (pathParts.length == 0) {
+            pathParts.push('')
+        }
+
+        if (pathParts[0] in this.routes) {
+            let route = this.routes[pathParts[0]]
+            if (route == this.currentRoute) {
                 console.log('updating')
-                route.update(reload)
+                if (update || path == this.currentPage) {
+                    route.update(pathParts)
+                } else {
+                    route.reload(pathParts)
+                }
             } else {
-                if (this.currentRoute) this.currentRoute.running = false
-                route.running = true
-                window.scrollTo(0,0)
-                route.load()
+                if (this.currentRoute) await this.currentRoute.unload(pathParts)
+                route.load(pathParts)
             }
             this.currentPage = path
             this.currentRoute = route
         } else {
+            this.currentPage = path
+            this.currentRoute = null
             this.content.innerHTML = '404 Error'
         }
 

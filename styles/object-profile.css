@@ -2,49 +2,19 @@
     --page-width: 50rem;
 }
 
-
-/* search bar */
-
-.search-container {
-    position: sticky;
-    top: 0;
-
-    background-color: var(--page-background-color);
-    padding-block: 0.2rem;
-
-    text-align: center;
-    z-index: 1;
-}
-
-#search-bar {
-    margin: 0;
-}
-
-/* search results */
-
-#search-results {
-    --grid-size: 9rem;
-    
-    display: grid;
-    grid-template-columns: repeat(auto-fit, var(--grid-size));
-    gap: 0.3rem;
-    justify-items: center;
-    justify-content: center;
-}
-
-/* pony profile */
-
-#pony-profile {
+#not-found {
     display: none; /* set to block in js */
 }
 
-#pony-profile h1 {
+/* object profile */
+
+#object-profile h1 {
     display: flex;
     align-items: center;
     gap: 0.2em;
 }
 
-#pony-profile-portrait-image {
+#object-profile-portrait-image {
     height: 1em;
 }
 

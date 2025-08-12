@@ -1,16 +1,21 @@
-import { createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
-import '../scripts/jquery-3.7.1.min.js'
+import { CATEGORIES, createElement, formatTime, getUrlParameter, LOC, setUrlParameter, toTitleCase } from "../scripts/common.js";
+import ObjectProfilePage from "../scripts/object-profile.js";
 
-import ItemListPage from "../scripts/components/object-list-page.js"
-
-export default class Shops extends ItemListPage {
+export default class ShopPage extends ObjectProfilePage {
     category = 'shops'
-    parameter = 'shop'
 
-    async showObjectProfile(itemId) {
-        const object = await super.showObjectProfile(itemId)
+    async createProfile() {
+        await super.createProfile()
 
-        console.log('showing', object)
+        if (this.object == null) {
+            return
+        }
+
+        const object = this.object
+
+        document.getElementById('object-profile-name').textContent = app.translate(object.name)
+        document.getElementById('object-profile-image').src = object.image
+
 
         document.querySelector('[data-object-info="town"]').textContent = toTitleCase(LOC.translate(object.location))
         document.querySelector('[data-object-info="level"]').textContent = object.unlock_level

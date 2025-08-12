@@ -205,7 +205,7 @@ export function objectCard(object, parameter = 'pony') {
         id: object.id,
         name: object.name[app.language],
         image: parameter == 'pony' ? object.image.full : object.image,
-        href: `?${parameter}=${object.id}`,
+        href: `/${parameter}/${object.id}/`,
         'image-placeholder': imagePlaceholders[parameter] ? imagePlaceholders[parameter] : imagePlaceholders['pony'],
     })
 }
