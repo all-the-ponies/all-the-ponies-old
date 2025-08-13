@@ -512,6 +512,15 @@ main {
     gap: 0.5em;
 }
 
+.dialog-body {
+    color: var(--blue);
+}
+
+.dialog .form-options {
+    display: flex;
+    flex-direction: column;
+}
+
 /* form stuff */
 
 .form-option {

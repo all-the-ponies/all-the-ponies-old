@@ -3,7 +3,7 @@
 
 <div id="search-section">
     <div class="search-container">
-        <button class="search-option button-blue">
+        <button id="filter-button" class="search-option button-blue">
             <img src="/assets/images/ui/filter.svg" alt="">
         </button>
         <label for="search-bar">Search</label>
@@ -12,15 +12,12 @@
     <section id="search-results"></section>
 </div>
 
-<dialog id="options-dialog" class="dialog">
-    <h1 class="dialog-header">Options</h1>
+<dialog id="filters-dialog" class="dialog">
+    <h1 class="dialog-header">Filters</h1>
     <div class="dialog-body">
         <form action="dialog">
             <div class="form-options">
-                <!-- <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
-                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
-                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
-                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div> -->
+                <label class="option checkbox"><input type="checkbox" name=""><span></span></label>
             </div>
             <div class="dialog-confirmation">
                 <button class="button-red" type="submit" value="cancel" formmethod="dialog">Cancel</button>

@@ -11,6 +11,35 @@ export default class ObjectSearchPage extends Page {
 
     searchQuery = ''
     searchScroll = 0
+
+    filters = {
+        ponies: {
+            playable: {
+                name: LOC.dictionary['PLAYABLE_CHARACTERS'],
+                type: 'bool',
+                default: true,
+                test: (object) => object.tags.length == 0,
+            },
+            unused: {
+                name: LOC.dictionary['UNUSED_CHARACTERS'],
+                type: 'bool',
+                default: false,
+                test: (object) => object.tags.includes('unused'),
+            },
+            npc: {
+                name: LOC.dictionary['NPC_CHARACTERS'],
+                type: 'bool',
+                default: false,
+                test: (object) => object.tags.includes('npc'),
+            },
+            quest: {
+                name: LOC.dictionary['QUEST_CHARACTERS'],
+                type: 'bool',
+                default: false,
+                test: (object) => object.tags.includes('quest'),
+            },
+        }
+    }
     
     async load(path) {
         await super.load(path)
@@ -19,7 +48,15 @@ export default class ObjectSearchPage extends Page {
         this.searchBar = $('#search-bar')
         this.searchResultsElement = $('#search-results')
         
-        this.filters = {}
+        this.appliedFilters = {}
+
+
+        document.getElementById('filter-button').addEventListener('click', () => {
+            this.showFilterOptions()
+        })
+
+        document.querySelector('#filters-dialog .dialog-confirmation [value="ok"]').addEventListener('click', () => this.getChosesFilters())
+
 
         this.searchBar.on('input', () => this.updateSearch())
 
@@ -56,15 +93,22 @@ export default class ObjectSearchPage extends Page {
         this.category = category
         this.searchResultsElement[0].replaceChildren()
 
+        const filters = this.filters[this.category]
+        this.appliedFilters = {}
+        if (filters) {
+            for (let [filter, data] of Object.entries(filters)) {
+                this.appliedFilters[filter] = data.default
+            }
+        }
+
         // this.searchBar[0].focus()
 
         // if (!this.searchCreated) {
         await this.createSearchCards()
         // }
 
-        if (this.currentScreen == 'search') {
-            this.updateSearch()
-        }
+        this.updateSearch()
+        
     }
 
     
@@ -182,24 +226,94 @@ export default class ObjectSearchPage extends Page {
     }
 
     async updateSearch() {
-        this.showSearch()
-
         this.searchQuery = this.searchBar.val()
         setUrlParameter('q', this.searchBar.val(), true)
 
+        const filters = this.filters[this.category]
+        console.log('appliedFilters', this.appliedFilters)
 
         let searchResults = gameData.searchName(this.searchBar.val(), this.category)
         // console.log(searchResults)
 
-        this.searchResultsElement.children().each(function () {
-            if (!searchResults.includes(this.id)) {
-                this.style.display = 'none'
+        for (let child of this.searchResultsElement[0].children) {
+            const object = gameData.getObject(child.id)
+
+            let hide = false
+            if (filters) {
+                let objectCategories = Object.keys(filters).filter((option) => filters[option].test(object))
+                hide = objectCategories.some((option) => !this.appliedFilters[option])
+            }
+            
+            if (hide || !searchResults.includes(child.id)) {
+                child.style.display = 'none'
                 // this.classList.add('hide')
             } else {
-                this.style.display = 'block'
+                child.style.display = 'block'
 
                 // this.classList.remove('hide')
             }
-        })
+        }
+    }
+
+    async showFilterOptions() {
+        await this.createFilterOption()
+        document.getElementById('filters-dialog').showModal()
+    }
+
+    async createFilterOption() {
+        const options = this.filters[this.category]
+        console.log('options', options, this.category)
+        const optionsElement = document.querySelector('#filters-dialog .form-options')
+        optionsElement.replaceChildren()
+        if (!options) {
+            return
+        }
+
+        for (let [option, info] of Object.entries(options)) {
+            console.log('option', option, info)
+            switch (info.type) {
+                case 'bool':
+                    optionsElement.append(
+                        createElement('label', {
+                            class: 'option checkbox',
+                        }, [
+                            createElement('input', {
+                                type: 'checkbox',
+                                name: `filter-${option}`,
+                                checked: this.appliedFilters[option],
+                            }),
+                            createElement('span', {
+                                text: app.translate(info.name),
+                            })
+                        ])
+                    )
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
+
+    getChosesFilters() {
+        const options = this.filters[this.category]
+        const optionsElement = document.querySelector('#filters-dialog .form-options')
+        if (!options) {
+            return
+        }
+
+        for (let [option, info] of Object.entries(options)) {
+            let optionEl = optionsElement.querySelector(`[name="filter-${option}"]`)
+            switch (info.type) {
+                case 'bool':
+                    this.appliedFilters[option] = optionEl.checked
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+
+        this.updateSearch()
     }
 }

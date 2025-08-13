@@ -225,9 +225,6 @@ export default class Quiz extends Page {
 
     submitOptionsDialog() {
         let formOptions = this.optionsDialog.find('form')
-        let formData = new FormData(formOptions[0])
-        console.log(formOptions[0]
-            , formData)
 
         for (let [option, optionInfo] of Object.entries(this.optionInfo)) {
             let optionElement = formOptions.find(`#option-${option}`)

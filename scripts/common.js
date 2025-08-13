@@ -163,6 +163,9 @@ export function createElement(tagName, attrs = {}, children = []) {
   for (let [attr, value] of Object.entries(attrs)) {
     if (attr == 'text') {
       element.innerText = value
+    } else if (attr in element && !(element[attr] instanceof Function)) {
+      console.log('is prop', attr, value)
+      element[attr] = value
     } else {
       element.setAttribute(attr, value)
     }

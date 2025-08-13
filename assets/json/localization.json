@@ -88,5 +88,17 @@
   },
   "OPTIONS_INCLUDE_UNUSED": {
     "english": "Include unused characters"
+  },
+  "PLAYABLE_CHARACTERS": {
+    "english": "Playable characters"
+  },
+  "UNUSED_CHARACTERS": {
+    "english": "Unused characters"
+  },
+  "NPC_CHARACTERS": {
+    "english": "Hidden ponies"
+  },
+  "QUEST_CHARACTERS":{
+    "english": "Quest ponies"
   }
 }
