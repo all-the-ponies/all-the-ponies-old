@@ -52,9 +52,14 @@ class App {
 
 
         this.languageSelector = document.getElementById('language')
-        this.languageSelector.addEventListener('change', () => this.refreshAll(true))
+        this.languageSelector.addEventListener('change', () => {
+            this.localeCompare = new Intl.Collator(gameData.languages[this.language].code).compare
+
+            this.refreshAll(true)
+        })
         this.sidebarToggle = document.getElementById('sidebar-toggle')
         this.createLanguageSelector()
+        this.localeCompare = new Intl.Collator(gameData.languages[this.language].code).compare
 
         this.content = document.getElementById('page-content')
         this.sidebarElement = document.getElementById('sidebar-links')

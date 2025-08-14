@@ -100,5 +100,11 @@
   },
   "QUEST_CHARACTERS":{
     "english": "Quest ponies"
+  },
+  "REGULAR_DECOR": {
+    "english": "Standard Decorations"
+  },
+  "PRO_DECOR": {
+    "english": "Pro Decorations"
   }
 }

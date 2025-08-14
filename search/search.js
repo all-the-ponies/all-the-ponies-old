@@ -38,6 +38,76 @@ export default class ObjectSearchPage extends Page {
                 default: false,
                 test: (object) => object.tags.includes('quest'),
             },
+        },
+
+        decor: {
+            regular: {
+                name: LOC.dictionary['REGULAR_DECOR'],
+                type: 'bool',
+                default: true,
+                test: (object) => !object.pro.is_pro,
+            },
+            pro: {
+                name: LOC.dictionary['PRO_DECOR'],
+                type: 'bool',
+                default: true,
+                test: (object) => object.pro.is_pro,
+            },
+        },
+    }
+
+    sorters = {
+        ponies: {
+            index: {
+                name: {english: 'Game order'},
+                check: (a, b) => a.index - b.index,
+            },
+            name: {
+                name: {english: 'Alphabetically'},
+                check: (a, b) => app.localeCompare(
+                    app.translate(a.name),
+                    app.translate(b.name),
+                ),
+            },
+        },
+        houses: {
+            index: {
+                name: {english: 'Game order'},
+                check: (a, b) => a.index - b.index,
+            },
+            name: {
+                name: {english: 'Alphabetically'},
+                check: (a, b) => app.localeCompare(
+                    app.translate(a.name),
+                    app.translate(b.name),
+                ),
+            },
+        },
+        shops: {
+            index: {
+                name: {english: 'Game order'},
+                check: (a, b) => a.index - b.index,
+            },
+            name: {
+                name: {english: 'Alphabetically'},
+                check: (a, b) => app.localeCompare(
+                    app.translate(a.name),
+                    app.translate(b.name),
+                ),
+            },
+        },
+        decor: {
+            index: {
+                name: {english: 'Game order'},
+                check: (a, b) => a.index - b.index,
+            },
+            name: {
+                name: {english: 'Alphabetically'},
+                check: (a, b) => app.localeCompare(
+                    app.translate(a.name),
+                    app.translate(b.name),
+                ),
+            },
         }
     }
     
@@ -49,13 +119,23 @@ export default class ObjectSearchPage extends Page {
         this.searchResultsElement = $('#search-results')
         
         this.appliedFilters = {}
+        this.sortMethod = 'index'
+        this.reverseSort = false
 
 
         document.getElementById('filter-button').addEventListener('click', () => {
-            this.showFilterOptions()
+            this.showFilterDialog()
+        })
+        document.getElementById('sort-button').addEventListener('click', () => {
+            this.showSortDialog()
         })
 
         document.querySelector('#filters-dialog .dialog-confirmation [value="ok"]').addEventListener('click', () => this.getChosesFilters())
+        document.querySelector('#sort-dialog .dialog-confirmation [value="ok"]').addEventListener('click', () => {
+            this.reverseSort = document.querySelector('#sort-dialog [name="reverse"]').checked
+            this.sortMethod = [...document.querySelectorAll('#sort-dialog .options-group input')].find((e) => e.checked)?.value
+            this.createSearchCards()
+        })
 
 
         this.searchBar.on('input', () => this.updateSearch())
@@ -222,7 +302,12 @@ export default class ObjectSearchPage extends Page {
         // return el1.index - el2.index
         let item1 = gameData.getObject(el1, this.category)
         let item2 = gameData.getObject(el2, this.category)
-        return item1.index - item2.index
+        const sortMethods = this.sorters[this.category]
+        let sortFunc = (a, b) => a.index - b.index
+        if (sortMethods) {
+            sortFunc = sortMethods[this.sortMethod].check
+        }
+        return sortFunc(item1, item2) * (this.reverseSort * -2 + 1)
     }
 
     async updateSearch() {
@@ -255,7 +340,7 @@ export default class ObjectSearchPage extends Page {
         }
     }
 
-    async showFilterOptions() {
+    async showFilterDialog() {
         await this.createFilterOption()
         document.getElementById('filters-dialog').showModal()
     }
@@ -315,5 +400,39 @@ export default class ObjectSearchPage extends Page {
         }
 
         this.updateSearch()
+    }
+
+    async showSortDialog() {
+        await this.createSortDialog()
+        document.getElementById('sort-dialog').showModal()
+    }
+
+    async createSortDialog() {
+        const sortMethods = this.sorters[this.category]
+        const sortMethodsElement = document.querySelector('#sort-dialog .options-group')
+        sortMethodsElement.replaceChildren()
+        if (!sortMethods) {
+            return
+        }
+
+        document.querySelector('#sort-dialog [name="reverse"]').checked = this.reverseSort
+
+        for (let [method, info] of Object.entries(sortMethods)) {
+            sortMethodsElement.append(
+                createElement('label', {
+                    class: 'option radio',
+                }, [
+                    createElement('input', {
+                        type: 'radio',
+                        name: 'sort',
+                        value: method,
+                        checked: this.sortMethod == method,
+                    }),
+                    createElement('span', {
+                        textContent: app.translate(info.name),
+                    })
+                ])
+            )
+        }
     }
 }

@@ -516,7 +516,8 @@ main {
     color: var(--blue);
 }
 
-.dialog .form-options {
+.dialog .form-options,
+.dialog .options-group {
     display: flex;
     flex-direction: column;
 }

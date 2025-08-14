@@ -3,21 +3,46 @@
 
 <div id="search-section">
     <div class="search-container">
+        <label for="search-bar">Search</label>
+        <input class="search-box" type="search" name="search-bar" id="search-bar" placeholder="Pony" />
+        
         <button id="filter-button" class="search-option button-blue">
             <img src="/assets/images/ui/filter.svg" alt="">
         </button>
-        <label for="search-bar">Search</label>
-        <input class="search-box" type="search" name="search-bar" id="search-bar" placeholder="Pony" />
+        <button id="sort-button" class="button-blue">
+            Sort by
+        </button>
     </div>
     <section id="search-results"></section>
 </div>
 
 <dialog id="filters-dialog" class="dialog">
-    <h1 class="dialog-header">Filters</h1>
+    <h1 class="dialog-header">Filter</h1>
     <div class="dialog-body">
         <form action="dialog">
             <div class="form-options">
                 <label class="option checkbox"><input type="checkbox" name=""><span></span></label>
+            </div>
+            <div class="dialog-confirmation">
+                <button class="button-red" type="submit" value="cancel" formmethod="dialog">Cancel</button>
+                <button class="button-green" type="submit" value="ok" formmethod="dialog">OK</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<dialog id="sort-dialog" class="dialog">
+    <h1 class="dialog-header">Fort by</h1>
+    <div class="dialog-body">
+        <form action="dialog">
+            <div class="form-options">
+                <label class="option checkbox">
+                    <input type="checkbox" name="reverse" value="reverse">
+                    <span>Reverse</span>
+                </label>
+                <div class="options-group">
+                    <label class="option radio"><input type="radio" name=""><span></span></label>
+                </div>
             </div>
             <div class="dialog-confirmation">
                 <button class="button-red" type="submit" value="cancel" formmethod="dialog">Cancel</button>
