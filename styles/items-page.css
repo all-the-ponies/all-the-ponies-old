@@ -177,7 +177,7 @@
 .search-option {
     width: 2rem;
     height: 2rem;
-    padding: 0.2rem;
+    padding-inline: 0.2rem;
 }
 
 .search-option img {

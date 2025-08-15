@@ -23,11 +23,11 @@ export default class ObjectProfilePage extends Page {
         this.object = gameData.getObject(this.id, this.category)
 
         if (!this.object || this.object.category != this.category) {
-            document.getElementById('not-found').style.display = 'block'
+            document.getElementById('not-found').style.display = ''
             document.getElementById('object-profile').style.display = 'none'
         } else {
             document.getElementById('not-found').style.display = 'none'
-            document.getElementById('object-profile').style.display = 'block'
+            document.getElementById('object-profile').style.display = ''
             this.createProfile()
         }
     }

@@ -8,7 +8,12 @@
 
 /* object profile */
 
-#object-profile h1 {
+#object-profile {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#object-profile .name {
     display: flex;
     align-items: center;
     gap: 0.2em;
@@ -19,7 +24,28 @@
 }
 
 
-/* start */
+.infobox {
+    /* border: 2px solid var(--pink); */
+    /* border-radius: 10px; */
+    border-collapse: collapse;
+}
+
+.infobox th {
+    border-radius: inherit;
+    
+    color: white;
+    /* background-color: var(--pink); */
+    padding: 0.5rem 1rem;
+
+    font-size: 1.5em;
+}
+
+.infobox td {
+    padding: 5px;
+}
+
+
+/* stars */
 
 .stars {
     display: flex;
