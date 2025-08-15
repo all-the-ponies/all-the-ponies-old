@@ -13,12 +13,30 @@ This is (or will be) a game where you try to name as many mlp gameloft ponies. T
 [ ] Save and continue later
 
 ### Pony index
-[ ] Search ponies
-[ ] Pony profile
+[x] Search ponies
+[x] Pony profile
 [ ] Links to wikis
 [ ] Wiki link checking
 [ ] Selecting ponies you have
 [ ] Export and import pony list
+
+## Development
+
+For development, first install the dependencies
+
+```shell
+pip install -r requirements.txt
+```
+
+Then start the local web server by running
+
+```shell
+python local_server.py
+```
+
+I mainly just created this because the live server vscode extension I was using (Five Server) doesn't handle query parameters after a slash, the reloading was getting a little annoying, and most importantly, it did not support custom 404 pages (which I need). The default python `http.server` script does handle query parameters after a slash, but it also makes the browser always use the cache, which is bad for development (I'd have to clear the cache every time I want to see a change). While it didn't support a custom 404 page by default, I was able to create my own script to handle that. As for the caching, well, I was also able to get rid of that, both the browser caching responses, and also caching linked .js and .css files.
+
+TLDR; I wasn't happy with the existing tools for a local web server, so I modified the default python `http.server` one to make it actually decent for development, and support custom 404 pages.
 
 ## Credits
 
