@@ -1,4 +1,4 @@
-import { checkVisible, createElement, linkHandler } from "../common.js"
+import { checkVisible, createElement, linkHandler, LOC } from "../common.js"
 import { setURL } from "../common.js"
 
 
@@ -132,7 +132,8 @@ class ObjectCard extends HTMLElement {
         cardBody.appendChild(image)
         container.appendChild(cardBody)
         shadow.appendChild(container)
-
+        
+        this.gameObject = window.gameData.getObject(this.getAttribute('object'))
 
         container.addEventListener('click', linkHandler)
     }
@@ -147,10 +148,11 @@ class ObjectCard extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ["name", "image"];
+        return ["object"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
+        this.gameObject = window.gameData.getObject(this.getAttribute('object'))
         this.updateElement()
     }
 
@@ -162,7 +164,7 @@ class ObjectCard extends HTMLElement {
         const name = shadow.getElementById('item-name')
         const cardBody = shadow.getElementById('card-body')
 
-        name.textContent = this.getAttribute('name')
+        name.textContent = LOC.translate(this.gameObject.name)
 
         // this.load()
     }
@@ -173,11 +175,7 @@ class ObjectCard extends HTMLElement {
         }
         const image = this.shadowRoot.getElementById('item-image')
         let imgUrl
-        if (this.hasAttribute('image')) {
-            imgUrl = this.getAttribute('image')
-        } else {
-            imgUrl = '/assets/images/ponies/full/Pony_Placeholder.png'
-        }
+        imgUrl = this.gameObject.category == 'ponies' ? this.gameObject.image.full : this.gameObject.image
         image.src = imgUrl
     }
 }
@@ -203,8 +201,9 @@ export function objectCard(object, parameter = 'pony') {
 
     return createElement('object-card', {
         id: object.id,
-        name: object.name[app.language],
-        image: parameter == 'pony' ? object.image.full : object.image,
+        object: object.id,
+        // name: object.name[app.language],
+        // image: parameter == 'pony' ? object.image.full : object.image,
         href: `/${parameter}/${object.id}/`,
         'image-placeholder': imagePlaceholders[parameter] ? imagePlaceholders[parameter] : imagePlaceholders['pony'],
     })
