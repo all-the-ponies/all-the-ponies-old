@@ -189,6 +189,8 @@ export default class ObjectSearchPage extends Page {
 
         this.updateSearch()
         
+        console.log('searchScroll', this.searchScroll)
+        window.scrollTo(0, this.searchScroll)
     }
 
     
@@ -294,8 +296,6 @@ export default class ObjectSearchPage extends Page {
         // }
         // timerEl.textContent = new Date().getTime() - startTime
 
-        console.log('searchScroll', this.searchScroll)
-        window.scrollTo(0, this.searchScroll)
     }
 
     sortResults(el1, el2) {
