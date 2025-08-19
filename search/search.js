@@ -121,7 +121,8 @@ export default class ObjectSearchPage extends Page {
         this.appliedFilters = {}
         this.sortMethod = 'index'
         this.reverseSort = false
-
+        
+        this.elementCache = {}
 
         document.getElementById('filter-button').addEventListener('click', () => {
             this.showFilterDialog()
@@ -211,6 +212,7 @@ export default class ObjectSearchPage extends Page {
 
     async unload(path) {
         await super.unload(path)
+        this.elementCache = {}
 
         if (path[0] == CATEGORIES[this.category].page) {
             this.searchScroll = getCurrentScroll()
@@ -222,8 +224,8 @@ export default class ObjectSearchPage extends Page {
     }
 
     createObjectCard(objectId) {
-        let object = gameData.getObject(objectId, this.category)
-        return objectCard(object, CATEGORIES[this.category].page)
+        // let object = gameData.getObject(objectId, this.category)
+        return objectCard(objectId, CATEGORIES[this.category].page)
     }
 
     showSearch() {
@@ -247,7 +249,7 @@ export default class ObjectSearchPage extends Page {
         // this.searchResultsElement.empty()
         console.log('creating search cards')
 
-        const objects = Object.keys(gameData.categories[this.category].objects)
+        const objects = Object.values(gameData.categories[this.category].objects)
         const elements = []
 
         window.app.progressBar.max = objects.length
@@ -256,21 +258,24 @@ export default class ObjectSearchPage extends Page {
         let i = 0
         const chunk_size = 200
 
+        objects.sort((a, b) => (this.sortResults(a, b)))
+        // this.searchResultsElement[0].replaceChildren()
         await waitForNextTask()
-        for (let itemId of objects.sort((a, b) => (this.sortResults(a, b)))) {
+        for (let itemId of objects) {
             if (!this.running) {
                 window.app.progressBar.progress = 0
                 return
             }
 
-            let objectCard = document.getElementById(itemId)
+            let objectCard = document.getElementById(itemId.id)
+            // let objectCard = null
             // let objectCard = this.elements[itemId] || null
             
             if (objectCard == null) {
                 elements.push(this.createObjectCard(itemId))
             } else {
-                let object = gameData.getObject(itemId, this.category)
-                objectCard.setAttribute('name', object.name[this.language])
+                // let object = gameData.getObject(itemId, this.category)
+                // objectCard.setAttribute('name', object.name[this.language])
                 elements.push(objectCard)
             }
             // this.elements[itemId] = objectCard
@@ -284,24 +289,25 @@ export default class ObjectSearchPage extends Page {
 
         this.searchCreated = true
 
-        // let timerEl = document.getElementById('timer')
-        // if (timerEl == null) {
-        //     timerEl = createElement(
-        //         'span',
-        //         {
-        //             id: 'timer',
-        //         }
-        //     )
-        //     document.querySelector('.search-container').appendChild(timerEl)
-        // }
-        // timerEl.textContent = new Date().getTime() - startTime
-
+        if (app.debug) {
+            let timerEl = document.getElementById('timer')
+            if (timerEl == null) {
+                timerEl = createElement(
+                    'span',
+                    {
+                        id: 'timer',
+                    }
+                )
+                document.querySelector('.search-container').appendChild(timerEl)
+            }
+            timerEl.textContent = new Date().getTime() - startTime
+        }
     }
 
-    sortResults(el1, el2) {
+    sortResults(item1, item2) {
         // return el1.index - el2.index
-        let item1 = gameData.getObject(el1, this.category)
-        let item2 = gameData.getObject(el2, this.category)
+        // let item1 = gameData.getObject(item1, this.category)
+        // let item2 = gameData.getObject(item2, this.category)
         const sortMethods = this.sorters[this.category]
         let sortFunc = (a, b) => a.index - b.index
         if (sortMethods) {

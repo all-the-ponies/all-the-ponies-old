@@ -1,4 +1,4 @@
-import { Localization } from "/scripts/common.js"
+import { Localization, isLocalhost } from "/scripts/common.js"
 import GameData from "/scripts/gameData.js"
 import '/scripts/jquery-3.7.1.min.js'
 
@@ -28,6 +28,8 @@ const searchPage = new ObjectSearchPage()
 
 class App {
     constructor() {
+        this.debug = isLocalhost()
+        
         this.progressBar = {
             element: document.getElementById('loading-bar'),
             set max(max) {

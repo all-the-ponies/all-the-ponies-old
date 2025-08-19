@@ -1,3 +1,16 @@
+export function isLocalhost() {
+  return window.location.hostname === 'localhost' ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === '[::1]' ||
+    // 127.0.0.1/8 is considered localhost for IPv4.
+    RegExp([
+      '^([a-z0-9\\.\\-_%]+:([a-z0-9\\.\\-_%])+?@)?',
+      '((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4',
+      '][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])?',
+      '(:[0-9]+)?(\/[^\\s]*)?$'
+    ].join(''), 'i').test(window.location.hostname)
+}
+
 
 // Load JSON text from server hosted file and return JSON parsed object
 // From stackoverflow https://stackoverflow.com/a/4117299/17129659
