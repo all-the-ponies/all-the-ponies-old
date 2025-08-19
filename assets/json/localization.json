@@ -1,4 +1,10 @@
 {
+  "APP_VERSION":{
+    "english": "App version"
+  },
+  "CONTENT_VERSION": {
+    "english": "Content Version"
+  },
   "PONYVILLE": {
     "arabic": "بونيفيل",
     "chinese": "PONYVILLE",

@@ -13,7 +13,7 @@ import ObjectSearchPage from "./search/search.js"
 
 import './scripts/components/game-object.js'
 
-import { linkHandler, setURL } from "./scripts/common.js"
+import { linkHandler, LOC, setURL } from "./scripts/common.js"
 
 window.LOC = new Localization('/assets/json/localization.json')
 window.gameData = new GameData('/assets/json/game-data.json')
@@ -97,6 +97,7 @@ class App {
     }
 
     translate(string) {
+        return LOC.translate(string)
         if (this.language in string) {
             return string[this.language]
         }
@@ -201,7 +202,9 @@ class App {
     refreshSidebar() {
         this.sidebarElement.replaceChildren()
 
-        console.log(this.language)
+        console.log(LOC.translate('APP_VERSION'), gameData.gameData.game_version)
+        document.getElementById('app-version').textContent = `${LOC.translate('APP_VERSION')}: ${gameData.gameData.game_version}`
+        document.getElementById('content-version').textContent = `${LOC.translate('CONTENT_VERSION')}: ${gameData.gameData.content_version}`
 
         for (let item of this.sidebar) {
             if (item == '~') {

@@ -69,10 +69,18 @@ export class Localization {
   }
 
   translate(key) {
-    if (typeof this.dictionary[key] != 'undefined') {
-      return this.dictionary[key][this.language] || this.dictionary[key]['english']
+    if (typeof key == 'string') {
+      if (typeof this.dictionary[key] != 'undefined') {
+        return this.dictionary[key][this.language] || this.dictionary[key]['english']
+      } else {
+        return key
+      }
     } else {
-      return key
+      if (this.language in key) {
+        return key[this.language]
+      } else {
+        return key['english']
+      }
     }
   }
 }
