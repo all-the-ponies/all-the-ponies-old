@@ -289,6 +289,7 @@ export default class ObjectSearchPage extends Page {
 
         this.searchCreated = true
 
+        await waitForNextTask()
         if (app.debug) {
             let timerEl = document.getElementById('timer')
             if (timerEl == null) {
@@ -321,13 +322,12 @@ export default class ObjectSearchPage extends Page {
         setUrlParameter('q', this.searchBar.val(), true)
 
         const filters = this.filters[this.category]
-        console.log('appliedFilters', this.appliedFilters)
 
         let searchResults = gameData.searchName(this.searchBar.val(), this.category)
         // console.log(searchResults)
 
         for (let child of this.searchResultsElement[0].children) {
-            const object = gameData.getObject(child.id)
+            const object = child.gameObject
 
             let hide = false
             if (filters) {
