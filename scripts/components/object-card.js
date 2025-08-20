@@ -18,9 +18,104 @@ const cardLoader = new IntersectionObserver((entries) => {
 
 
 class ObjectCard extends HTMLElement {
+    _style = `
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        :host {
+            left: 0px;
+            background-color: white;
+
+            width: var(--grid-size, 10rem);
+            height: calc(var(--grid-size, 10rem) * (4 / 3));
+            aspect-ratio: 3 / 4;
+
+            border-radius: 0.8rem;
+            --box-shadow: inset 0px -1px 4px hsl(211, 30%, 80%);
+            box-shadow: var(--box-shadow);
+
+            cursor: pointer;
+            container-type: inline-size;
+            text-decoration: none;
+
+            transition: box-shadow 150ms ease-out,
+                        scale 150ms ease-out;
+        }
+        
+        :host(:hover),
+        :host(:focus) {
+            box-shadow: var(--box-shadow),
+                        0px 0px 5px hsl(211, 30%, 30%);
+            scale: 105%;
+        }
+
+        .add-button {
+            visibility: visible;
+        }
+
+        :host(:hover) .add-button {
+            visibility: visible;
+        }
+
+        a {
+            border-radius: inherit;
+            text-decoration: none;
+        }
+
+        .item-name {
+            font-size: 10cqw;
+            word-break: break-word;
+            text-shadow: var(--text-shadow);
+
+            color: white;
+            text-align: center;
+            display: grid;
+            align-items: center;
+            width: 100%;
+            height: 20%;
+            background-image: linear-gradient(var(--pink-light), var(--pink));
+            /* box-shadow: 0px 1px 0px 1px var(--pink-dark); */
+            border-bottom: 2px solid var(--pink-dark);
+            
+            border-top-left-radius: inherit;
+            border-top-right-radius: inherit;
+        }
+        
+        .card-body {
+            width: 100%;
+            height: 80%;
+            position: relative;
+        }
+
+        .item-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            padding: 1rem;
+        }
+
+        .left-container,
+        .right-container {
+            height: 100%;
+            width: 2rem;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+        }
+        .left-container {
+            left: 0;
+        }
+        .right-container {
+            right: 0;
+        }
+    `
+
     constructor() {
         super()
-
         this.loaded = false
     }
 
@@ -33,33 +128,57 @@ class ObjectCard extends HTMLElement {
             container.id = 'container'
             shadow.appendChild(container)
             container.addEventListener('click', linkHandler)
-        }
 
-        let name = shadow.getElementById('item-name')
-        
-        if (name == null) {
-            name = document.createElement('span')
-            name.classList.add('item-name')
-            name.id = 'item-name'
-            container.appendChild(name)
-        }
+            container.appendChild(createElement('link', {
+                rel: 'stylesheet',
+                href: '/styles/style.css',
+            }))
+            container.appendChild(createElement('style', {
+                textContent: this._style
+            }))
 
-        let cardBody = shadow.getElementById('card-body')
+            container.appendChild(createElement('span', {
+                class: 'item-name',
+                id: 'item-name',
+            }))
 
-        if (cardBody == null) {
-            cardBody = document.createElement('div')
-            cardBody.classList.add('card-body')
-            cardBody.id = 'card-body'
+            const cardBody = createElement('div', {
+                class: 'card-body',
+                id: 'card-body',
+            })
             container.appendChild(cardBody)
-        }
 
-        let image = shadow.getElementById('item-image')
+            const leftContainer = createElement('div', {
+                class: 'left-container'
+            })
+            const rightContainer = createElement('div', {
+                class: 'right-container'
+            })
 
-        if (image == null) {
-            image = document.createElement('img')
-            image.classList.add('item-image')
-            image.id = 'item-image'
-            image.loading = 'lazy'
+            cardBody.appendChild(leftContainer)
+            cardBody.appendChild(rightContainer)
+
+            const addButton = createElement('button', {
+                class: 'add-button button-circle button-green',
+                textContent: '+',
+                id: 'add-button',
+                'data-state': 'add',
+            })
+            rightContainer.appendChild(addButton)
+            addButton.addEventListener('click', (e) => {
+                e.stopPropagation()
+                e.preventDefault()
+
+                saveManager.setOwned(this.gameObject.id, addButton.getAttribute('data-state') == 'add')
+                
+                this.updateAddButton()
+            })
+            
+            const image = createElement('img', {
+                class: 'item-image',
+                id: 'item-image',
+                loading: 'lazy',
+            })
             image.style.visibility = 'hidden'
             cardBody.appendChild(image)
 
@@ -75,84 +194,6 @@ class ObjectCard extends HTMLElement {
                 image.src = this.getAttribute('image-placeholder')
             })
         }
-
-        if (shadow.querySelector('style') == null) {
-
-            const style = document.createElement('style')
-            style.textContent = `
-                * {
-                    box-sizing: border-box;
-                    padding: 0;
-                    margin: 0;
-                }
-    
-                :host {
-                    left: 0px;
-                    background-color: white;
-    
-                    width: var(--grid-size, 10rem);
-                    height: calc(var(--grid-size, 10rem) * (4 / 3));
-                    aspect-ratio: 3 / 4;
-    
-                    border-radius: 0.8rem;
-                    --box-shadow: inset 0px -1px 4px hsl(211, 30%, 80%);
-                    box-shadow: var(--box-shadow);
-    
-                    cursor: pointer;
-                    container-type: inline-size;
-                    text-decoration: none;
-    
-                    transition: box-shadow 150ms ease-out,
-                                scale 150ms ease-out;
-                }
-                
-                :host(:hover),
-                :host(:focus) {
-                    box-shadow: var(--box-shadow),
-                                0px 0px 5px hsl(211, 30%, 30%);
-                    scale: 105%;
-                }
-    
-                a {
-                    border-radius: inherit;
-                    text-decoration: none;
-                }
-    
-                .item-name {
-                    font-size: 10cqw;
-                    word-break: break-word;
-                    text-shadow: var(--text-shadow);
-    
-                    color: white;
-                    text-align: center;
-                    display: grid;
-                    align-items: center;
-                    width: 100%;
-                    height: 20%;
-                    background-image: linear-gradient(var(--pink-light), var(--pink));
-                    /* box-shadow: 0px 1px 0px 1px var(--pink-dark); */
-                    border-bottom: 2px solid var(--pink-dark);
-                    
-                    border-top-left-radius: inherit;
-                    border-top-right-radius: inherit;
-                }
-                
-                .card-body {
-                    width: 100%;
-                    height: 80%;
-                }
-    
-                .item-image {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    object-position: center;
-                    padding: 1rem;
-                }
-            `
-            container.appendChild(style)
-        }
-
         
         this.gameObject = window.gameData.getObject(this.getAttribute('object'))
 
@@ -188,8 +229,24 @@ class ObjectCard extends HTMLElement {
         name.textContent = LOC.translate(this.gameObject.name)
 
         
+        this.updateAddButton()
 
         // this.load()
+    }
+
+    updateAddButton() {
+        const addButton = this.shadowRoot.getElementById('add-button')
+        if (saveManager.owned(this.gameObject.id)) {
+            addButton.classList.remove('button-green')
+            addButton.classList.add('button-red')
+            addButton.setAttribute('data-state', 'remove')
+            addButton.textContent = '-'
+        } else {
+            addButton.classList.remove('button-red')
+            addButton.classList.add('button-green')
+            addButton.setAttribute('data-state', 'add')
+            addButton.textContent = '+'
+        }
     }
 
     load() {

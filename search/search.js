@@ -188,7 +188,7 @@ export default class ObjectSearchPage extends Page {
         await this.createSearchCards()
         // }
 
-        this.updateSearch()
+        // this.updateSearch()
         
         console.log('searchScroll', this.searchScroll)
         window.scrollTo(0, this.searchScroll)
@@ -207,7 +207,7 @@ export default class ObjectSearchPage extends Page {
         } else {
             this.searchBar.val('')
         }
-        this.updateSearch()
+        // this.updateSearch()
     }
 
     async unload(path) {
@@ -289,6 +289,7 @@ export default class ObjectSearchPage extends Page {
 
         this.searchCreated = true
 
+        this.updateSearch()
         await waitForNextTask()
         if (app.debug) {
             let timerEl = document.getElementById('timer')

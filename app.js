@@ -1,5 +1,6 @@
 import { Localization, isLocalhost } from "/scripts/common.js"
 import GameData from "/scripts/gameData.js"
+import SaveManager from "./scripts/saveManager.js"
 import '/scripts/jquery-3.7.1.min.js'
 
 import Index from "./index.js"
@@ -17,6 +18,7 @@ import { linkHandler, LOC, setURL } from "./scripts/common.js"
 
 window.LOC = new Localization('/assets/json/localization.json')
 window.gameData = new GameData('/assets/json/game-data.json')
+window.saveManager = new SaveManager()
 
 document.addEventListener('click', linkHandler)
 
