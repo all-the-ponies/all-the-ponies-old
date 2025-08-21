@@ -20,6 +20,12 @@ export default class ObjectSearchPage extends Page {
                 default: true,
                 test: (object) => object.tags.length == 0,
             },
+            pro: {
+                name: LOC.dictionary['PRO_PONIES'],
+                type: 'bool',
+                default: true,
+                test: (object) => object.pro != null,
+            },
             unused: {
                 name: LOC.dictionary['UNUSED_CHARACTERS'],
                 type: 'bool',
@@ -333,7 +339,7 @@ export default class ObjectSearchPage extends Page {
             let hide = false
             if (filters) {
                 let objectCategories = Object.keys(filters).filter((option) => filters[option].test(object))
-                hide = objectCategories.some((option) => !this.appliedFilters[option])
+                hide = !objectCategories.some((option) => this.appliedFilters[option])
             }
             
             if (hide || !searchResults.includes(child.id)) {

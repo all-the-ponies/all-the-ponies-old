@@ -105,12 +105,22 @@ class ObjectCard extends HTMLElement {
             position: absolute;
             display: flex;
             justify-content: center;
+
+            padding: 0.4rem 0.3rem;
         }
         .left-container {
             left: 0;
         }
         .right-container {
             right: 0;
+        }
+
+        .left-container > *,
+        .right-container > * {
+            width: 1.5rem;
+            height: 1.5rem;
+
+            margin: 0;
         }
     `
 
@@ -120,6 +130,8 @@ class ObjectCard extends HTMLElement {
     }
 
     connectedCallback() {
+        this.gameObject = window.gameData.getObject(this.getAttribute('object'))
+        
         const shadow = this.shadowRoot || this.attachShadow({ mode: "open" })
 
         let container = shadow.getElementById('container')
@@ -195,9 +207,6 @@ class ObjectCard extends HTMLElement {
             })
         }
         
-        this.gameObject = window.gameData.getObject(this.getAttribute('object'))
-
-
 
         cardLoader.observe(this)
         this.updateElement()
@@ -230,6 +239,7 @@ class ObjectCard extends HTMLElement {
 
         
         this.updateAddButton()
+        this.updateSides()
 
         // this.load()
     }
@@ -249,6 +259,32 @@ class ObjectCard extends HTMLElement {
         }
     }
 
+    updateSides() {
+        const shadow = this.shadowRoot
+        
+        const leftContainer = shadow.querySelector('.left-container')
+        const rightContainer = shadow.querySelector('.right-container')
+
+        const leftElements = []
+
+        let pro = shadow.getElementById('pro')
+        if (this.gameObject.pro) {
+            if (pro == null) {
+                pro = createElement('img', {
+                    id: 'pro',
+                    loading: 'lazy',
+                })
+                pro.style.visibility = 'hidden'
+            }
+            pro.addEventListener('load', () => {
+                pro.style.visibility = 'visible'
+            })
+            leftElements.push(pro)
+        }
+
+        leftContainer.replaceChildren(...leftElements)
+    }
+
     load() {
         if (this.loaded) {
             return
@@ -257,6 +293,11 @@ class ObjectCard extends HTMLElement {
         let imgUrl
         imgUrl = this.gameObject.category == 'ponies' ? this.gameObject.image.full : this.gameObject.image
         image.src = imgUrl
+
+        const pro = this.shadowRoot.getElementById('pro')
+        if (pro != null) {
+            pro.src = '/assets/images/ui/pro-pony.png'
+        }
     }
 }
 
