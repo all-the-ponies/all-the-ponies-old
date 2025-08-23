@@ -348,7 +348,7 @@ main {
 }
 
 .button:hover,
-.button:focus-visible, {
+.button:focus-visible {
     background-image: linear-gradient(var(--bottom-color), var(--top-color));
 }
 
@@ -412,10 +412,7 @@ main {
     --shadow-color: var(--orange-dark);
 }
 
-.button-green:disabled,
-.button-red:disabled,
-.button-blue:disabled,
-.button-orange:disabled {
+.button:disabled {
     --top-color: var(--grey-light);
     --bottom-color: var(--grey);
     --shadow-color: var(--grey-dark);
