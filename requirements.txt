@@ -3,3 +3,7 @@ Pillow
 numpy
 cssselect
 lxml
+charset-normalizer
+rich
+requests
+
