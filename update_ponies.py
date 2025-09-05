@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 
 import charset_normalizer
 import requests
-import requests
 from rich.progress import (
     BarColumn,
     MofNCompleteColumn,
