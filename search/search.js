@@ -177,16 +177,32 @@ export default class ObjectSearchPage extends Page {
             this.searchScroll = 0
         }
 
+
         this.category = category
         this.searchResultsElement[0].replaceChildren()
 
         const filters = this.filters[this.category]
+        let urlFilters = getUrlParameter('filter')
+        if (urlFilters != null) {
+            urlFilters = urlFilters.split('.')
+        } else {
+            urlFilters = []
+        }
         this.appliedFilters = {}
         if (filters) {
             for (let [filter, data] of Object.entries(filters)) {
-                this.appliedFilters[filter] = data.default
+                if (urlFilters.length) {
+                    if (urlFilters.includes(filter)) {
+                        this.appliedFilters[filter] = true
+                    }
+                } else {
+                    this.appliedFilters[filter] = data.default
+                }
             }
         }
+
+        this.sortMethod = getUrlParameter('sort') || 'index'
+        this.reverseSort = getUrlParameter('reversed') == 'true'
 
         // this.searchBar[0].focus()
 
@@ -327,8 +343,16 @@ export default class ObjectSearchPage extends Page {
     async updateSearch() {
         this.searchQuery = this.searchBar.val()
         setUrlParameter('q', this.searchBar.val(), true)
-
+        setUrlParameter('filter', Object.keys(this.appliedFilters)
+            .filter(option => this.appliedFilters[option])
+            .join('.'),
+            true
+        )
+        setUrlParameter('sort', this.sortMethod != 'index' ? this.sortMethod : '' , true)
+        setUrlParameter('reversed', this.reverseSort ? 'true' : '', true)
+        
         const filters = this.filters[this.category]
+
 
         let searchResults = gameData.searchName(this.searchBar.val(), this.category)
         // console.log(searchResults)
