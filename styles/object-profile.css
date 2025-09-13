@@ -23,6 +23,12 @@
     height: 1em;
 }
 
+#object-profile-image {
+    max-width: 10rem;
+    object-fit: contain;
+    object-position: center;
+}
+
 
 .infobox {
     /* border: 2px solid var(--pink); */
@@ -33,7 +39,7 @@
 .infobox th {
     border-radius: inherit;
     
-    color: white;
+    /* color: white; */
     /* background-color: var(--pink); */
     padding: 0.5rem 1rem;
 
@@ -53,6 +59,10 @@
 }
 
 .star {
+    --color-inactive: #8A2D48;
+    --color-active: #FFF53A;
+    --color-hover: #FFF53A;
+
     background-color: #8A2D48;
     width: 1rem;
     aspect-ratio: 1 / 1;
@@ -72,10 +82,11 @@
     top: 0;
     left: 0;
     background-color: #FFF53A;
+    display: none;
 }
 
-.star[data-filled="0"]::after {
-    display: none;
+.star.filled-star::after {
+    display: revert;
 }
 
 
