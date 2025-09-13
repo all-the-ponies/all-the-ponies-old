@@ -13,7 +13,8 @@ export default class ObjectProfilePage extends Page {
         await super.load(path)
         this.objectProfileSection = document.getElementById('object-profile')
         
-        document.querySelector('.to-search').href = `/search/${this.category}/`
+        // document.querySelector('.to-search').href = `/search/${this.category}/`
+        document.querySelector('.to-search').addEventListener('click', () => history.back())
 
         this.reload(path)
     }
