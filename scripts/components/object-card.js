@@ -127,6 +127,7 @@ class ObjectCard extends HTMLElement {
     constructor() {
         super()
         this.loaded = false
+        this.removeCallback = null
     }
 
     connectedCallback() {
@@ -170,21 +171,27 @@ class ObjectCard extends HTMLElement {
             cardBody.appendChild(leftContainer)
             cardBody.appendChild(rightContainer)
 
-            const addButton = createElement('button', {
-                class: 'add-button button-circle button-green',
-                textContent: '+',
-                id: 'add-button',
-                'data-state': 'add',
-            })
-            rightContainer.appendChild(addButton)
-            addButton.addEventListener('click', (e) => {
-                e.stopPropagation()
-                e.preventDefault()
+            if (['ponies', 'shops'].includes(this.gameObject.category)) {
+                const addButton = createElement('button', {
+                    class: 'add-button button-circle button-green',
+                    textContent: '+',
+                    id: 'add-button',
+                    'data-state': 'add',
+                })
+                rightContainer.appendChild(addButton)
+                addButton.addEventListener('click', (e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+    
+                    saveManager.setOwned(this.gameObject.id, addButton.getAttribute('data-state') == 'add')
+                    
+                    this.updateAddButton()
 
-                saveManager.setOwned(this.gameObject.id, addButton.getAttribute('data-state') == 'add')
-                
-                this.updateAddButton()
-            })
+                    if (addButton.getAttribute('data-state') == 'add' && this.removeCallback != null) {
+                        this.removeCallback(this)
+                    }
+                })
+            }
             
             const image = createElement('img', {
                 class: 'item-image',
@@ -246,6 +253,9 @@ class ObjectCard extends HTMLElement {
 
     updateAddButton() {
         const addButton = this.shadowRoot.getElementById('add-button')
+        if (addButton == null) {
+            return
+        }
         if (saveManager.owned(this.gameObject.id)) {
             addButton.classList.remove('button-green')
             addButton.classList.add('button-red')
@@ -268,7 +278,7 @@ class ObjectCard extends HTMLElement {
         const leftElements = []
 
         let pro = shadow.getElementById('pro')
-        if (this.gameObject.pro) {
+        if (this.gameObject.category == 'ponies' && this.gameObject.pro) {
             if (pro == null) {
                 pro = createElement('img', {
                     id: 'pro',
