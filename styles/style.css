@@ -486,6 +486,31 @@ main {
   appearance: none;
 }
 
+/* dropdown */
+
+.dropdown {
+    /* width: 100%; */
+    height: auto;
+    font-size: 1.2rem;
+    font-family: var(--font-family);
+    color: var(--blue);
+
+    border: var(--pink-enabled) 2px solid;
+    background-color: rgba(252, 252, 252, 0.7);
+
+    text-wrap: nowrap;
+    scrollbar-width: none;
+
+    padding: 0.2em;
+
+    margin: 0;
+}
+
+.dropdown:focus-within {
+    outline: none;
+    border-color: var(--pink);
+}
+
 /* dialog */
 
 .dialog {

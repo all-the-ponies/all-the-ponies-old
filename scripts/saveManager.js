@@ -43,6 +43,18 @@ export default class SaveManager {
         this.saveToLocalStorage()
     }
 
+    get houses() {
+        const houses = []
+        for (let pony of Object.keys(this.data.inventory.categories.ponies)) {
+            const house = gameData.getObject(pony, 'ponies').house
+            if (!houses.includes(house)) {
+                houses.push(house)
+            }
+        }
+
+        return houses
+    }
+
     getInfo(id) {
         for (let category of Object.values(this.data.inventory.categories)) {
             if (id in category) {

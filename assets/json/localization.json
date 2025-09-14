@@ -80,6 +80,57 @@
     "thai": "คลูจทาวน์",
     "turkish": "KLUGETOWN"
   },
+  "PONIES": {
+    "arabic": "المهور",
+    "chinese": "小马",
+    "english": "Ponies",
+    "french": "Poneys",
+    "german": "Ponys",
+    "italian": "Pony",
+    "japanese": "ポニー",
+    "korean": "포니",
+    "brazilian portuguese": "Pôneis",
+    "russian": "Пони",
+    "spanish": "Ponis",
+    "thai": "โพนี่",
+    "turkish": "Pony'ler"
+  },
+  "HOUSES": {
+    "english": "Houses"
+  },
+  "SHOPS": {
+    "arabic": "المتاجر",
+    "chinese": "商店",
+    "english": "Shops",
+    "french": "Magasins",
+    "german": "Läden",
+    "italian": "Stand",
+    "japanese": "お店",
+    "korean": "건물",
+    "brazilian portuguese": "Lojas",
+    "russian": "Магазины",
+    "spanish": "Negocios",
+    "thai": "ร้าน",
+    "turkish": "Dükkanlar"
+  },
+  "DECOR": {
+    "arabic": "ديكور",
+    "chinese": "装饰品",
+    "english": "Décor",
+    "french": "Décorations",
+    "german": "Deko",
+    "italian": "Decorazioni",
+    "japanese": "デコレーション",
+    "korean": "장식",
+    "brazilian portuguese": "Decoração",
+    "russian": "Декор",
+    "spanish": "Decoración",
+    "thai": "ของตกแต่ง",
+    "turkish": "Süsleme"
+  },
+  "INVENTORY": {
+    "english": "Inventory"
+  },
   "OPTIONS_IGNORE_SPACES": {
     "english": "Ignore Spaces"
   },

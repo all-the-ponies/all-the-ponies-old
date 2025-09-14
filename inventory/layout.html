@@ -1,10 +1,18 @@
 <link rel="stylesheet" href="/styles/search.css">
-<!-- <link rel="stylesheet" href="style.css"> -->
+<link rel="stylesheet" href="style.css">
+
+ <h1>Inventory</h1>
+
+<div id="stats"></div>
 
 <div id="search-section">
     <div class="search-container">
-        <label for="search-bar">Search</label>
-        <input class="search-box" type="search" name="search-bar" id="search-bar" placeholder="Pony" />
+        <select name="category" id="category-selector" value="ponies" class="dropdown"></select>
+
+        <label>
+            Search
+            <input class="search-box" type="search" name="search-bar" id="search-bar" placeholder="Pony" />
+        </label>
         
         <button id="filter-button" class="search-option button button-blue">
             <!-- Filter -->

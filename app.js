@@ -11,6 +11,7 @@ import DecorPage from "./decor/decor.js"
 import Quiz from "./quiz/quiz.js"
 import ObjectListPage from "./scripts/components/object-list-page.js"
 import ObjectSearchPage from "./search/search.js"
+import InventoryPage from "./inventory/inventory.js"
 
 import './scripts/components/game-object.js'
 
@@ -120,6 +121,8 @@ class App {
         shop: new ShopPage(),
         decor: new DecorPage(),
 
+        inventory: new InventoryPage(),
+        
         quiz: new Quiz(),
     }
 
@@ -129,6 +132,8 @@ class App {
             ['/search/houses/', gameData.categories.houses.name],
             ['/search/shops/', gameData.categories.shops.name],
             ['/search/decor/', gameData.categories.decor.name],
+            '~',
+            ['/inventory/', LOC.dictionary.INVENTORY],
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
         ]

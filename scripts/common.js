@@ -164,9 +164,9 @@ export function getUrlParameter(param) {
 
 export function linkHandler(e) {
     // e.preventDefault()
-    console.log('target', e.target)
+    // console.log('target', e.target)
     const link = e.target.closest('a')
-    console.log('link', link)
+    // console.log('link', link)
     if (link?.tagName == 'A') {
         const url = new URL(link.href)
         console.log(location)
