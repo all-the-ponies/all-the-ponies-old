@@ -18,7 +18,7 @@ export default class GuesserPage extends Page {
 
         this.startButton.addEventListener('click', () => this.start())
         this.stopButton.addEventListener('click', () => this.stop())
-        this.skipButton.addEventListener('click', () => this.getRandomPony())
+        this.skipButton.addEventListener('click', () => this.showPony())
         this.hintButton.addEventListener('click', () => this.showHint())
         this.nameInput.addEventListener('input', () => this.checkPony())
 
@@ -119,7 +119,7 @@ export default class GuesserPage extends Page {
         setTimeout(() => {
             this.ponyImage.classList.add('silhouette')
             this.getRandomPony()
-        }, 1000)
+        }, 1500)
     }
 
     showHint() {
