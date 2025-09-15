@@ -1,14 +1,18 @@
 {
     "ponies": {
-        "page": "pony"
+        "page": "pony",
+        "string": "PONIES"
     },
     "houses": {
-        "page": "house"
+        "page": "house",
+        "string": "HOUSES"
     },
     "shops": {
-        "page": "shop"
+        "page": "shop",
+        "string": "SHOPS"
     },
     "decor": {
-        "page": "decor"
+        "page": "decor",
+        "string": "DECOR"
     }
 }
