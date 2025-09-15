@@ -174,7 +174,6 @@ export default class InventoryPage extends Page {
         }
 
         this.showStats()
-        this.createCategorySelector()
 
         this.category = category
         this.searchResultsElement[0].replaceChildren()
@@ -187,6 +186,7 @@ export default class InventoryPage extends Page {
         if (!this.categories.includes(this.category)) {
             this.category = 'ponies'
         }
+        this.createCategorySelector()
         
 
         // this.searchBar[0].focus()
