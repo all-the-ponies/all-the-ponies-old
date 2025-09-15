@@ -2,7 +2,10 @@ export default class SaveManager {
     STRUCTURE = {
         version: 1,
         inventory: {
-            categories: {}
+            categories: {
+                ponies: {},
+                shops: {},
+            }
         },
         notes: {},
         lists: []

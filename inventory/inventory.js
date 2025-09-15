@@ -184,7 +184,7 @@ export default class InventoryPage extends Page {
         this.sortMethod = getUrlParameter('sort') || 'index'
         this.reverseSort = getUrlParameter('reversed') == 'true'
         this.category = getUrlParameter('category')
-        if (!this.categories.includes(category)) {
+        if (!this.categories.includes(this.category)) {
             this.category = 'ponies'
         }
         
@@ -318,9 +318,9 @@ export default class InventoryPage extends Page {
 
     setNoneText() {
         this.searchResultsElement[0].appendChild(createElement('a', {
-            textContent: `Add ${toTitleCase(LOC.translate(CATEGORIES[this.category].string))}`,
+            textContent: `Add ${toTitleCase(LOC.translate(CATEGORIES[this.category == 'houses' ? 'ponies' : this.category].string))}`,
             class: 'link',
-            href: `/search/${this.category}/`
+            href: this.category == 'houses' ? `/search/ponies/` : `/search/${this.category}/`
         }))
     }
 
