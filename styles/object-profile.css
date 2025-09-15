@@ -9,8 +9,9 @@
 /* object profile */
 
 #object-profile {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    /* flex-wrap: wrap; */
 }
 
 #object-profile .name {

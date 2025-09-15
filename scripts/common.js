@@ -224,6 +224,10 @@ export function formatTime(time) {
   return out.trim();
 }
 
+export function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)]
+}
+
 function truncTime(time, value) {
   var num = Math.trunc(time / value);
   time -= value * num;

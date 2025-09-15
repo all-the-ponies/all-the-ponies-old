@@ -1,0 +1,142 @@
+import { pickRandom } from "../scripts/common.js"
+import Page from "../scripts/page.js"
+
+export default class GuesserPage extends Page {
+    async load() {
+        await super.load()
+
+        this.nameInput = document.getElementById('name-input')
+        this.nameEl = document.getElementById('name')
+        this.descriptionEl = document.getElementById('description')
+        this.ponyImage = document.getElementById('pony-image')
+        this.startButton = document.getElementById('start')
+        this.stopButton = document.getElementById('stop')
+        this.progressEl = document.getElementById('progress')
+        this.skipButton = document.getElementById('skip')
+        this.hintButton = document.getElementById('hint')
+        this.timerEl = document.getElementById('timer')
+
+        this.startButton.addEventListener('click', () => this.start())
+        this.stopButton.addEventListener('click', () => this.stop())
+        this.skipButton.addEventListener('click', () => this.getRandomPony())
+        this.hintButton.addEventListener('click', () => this.showHint())
+        this.nameInput.addEventListener('input', () => this.checkPony())
+
+        this.currentPony = null
+        this.guessedPonies = []
+        this.usedHints = []
+    }
+
+    getRandomPony() {
+        this.usedHints = []
+        this.descriptionEl.textContent = ''
+        this.nameEl.textContent = '???'
+
+        const ponies = Object.values(gameData.categories.ponies.objects)
+        this.currentPony = pickRandom(ponies)
+        console.log('pony', this.currentPony)
+        while (this.guessedPonies.includes(this.currentPony.id)) {
+            this.currentPony = pickRandom(ponies)
+        }
+
+        this.createSilhouette()
+    }
+
+    createSilhouette() {
+        this.ponyImage.src = this.currentPony.image.full
+    }
+
+    checkPony() {
+        let guessedName = gameData.transformName(this.nameInput.value)
+        let ponyName = gameData.transformName(app.translate(this.currentPony.name))
+
+        if (ponyName == guessedName) {
+            this.nameInput.value = ''
+            this.guessedPonies.push(this.currentPony.id)
+            this.updateProgress()
+            this.showPony()
+            return
+        }
+
+        console.log('alt names', this.currentPony.alt_name[app.language])
+        if (this.currentPony.alt_name[app.language]) {
+            for (let altName of this.currentPony.alt_name[app.language]) {
+                let ponyName = gameData.transformName(altName)
+
+                if (ponyName == guessedName) {
+                    this.nameInput.value = ''
+                    this.guessedPonies.push(this.currentPony.id)
+                    this.updateProgress()
+                    this.showPony()
+                    return
+                }
+            }
+        }
+    }
+
+    updateProgress() {
+        this.progressEl.textContent = this.guessedPonies.length
+    }
+
+    updateTimer() {
+        let now = new Date().getTime()
+        let timeElapsed = now - this.startTime
+
+        let seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
+        let minutes = Math.floor((timeElapsed % (1000 * 60 * 60)) / (1000 * 60))
+        this.timerEl.textContent = `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`
+    }
+
+    start() {
+        this.startButton.disabled = true
+        this.stopButton.disabled = false
+        this.skipButton.disabled = false
+        this.nameInput.disabled = false
+        this.hintButton.disabled = false
+        this.currentPony = null
+        this.guessedPonies = []
+        this.startTime = new Date().getTime()
+        this._timerInterval = setInterval(() => this.updateTimer(), 1000)
+
+        this.updateProgress()
+        this.getRandomPony()
+    }
+
+    stop() {
+        this.startButton.disabled = false
+        this.stopButton.disabled = true
+        this.nameInput.disabled = true
+        this.hintButton.disabled = true
+        this.skipButton.disabled = true
+
+        clearInterval(this._timerInterval)
+    }
+
+    showPony() {
+        this.ponyImage.classList.remove('silhouette')
+        this.nameEl.textContent = app.translate(this.currentPony.name)
+
+        setTimeout(() => {
+            this.ponyImage.classList.add('silhouette')
+            this.getRandomPony()
+        }, 1000)
+    }
+
+    showHint() {
+        const hints = [
+            'description',
+            // 'show',
+        ]
+
+        let hint = pickRandom(hints)
+        switch (hint) {
+            case 'description':
+                const name = app.translate(this.currentPony.name)
+                this.descriptionEl.textContent = app.translate(this.currentPony.description).replaceAll(name, '____')
+                
+                break;
+            default:
+                break;
+        }
+    }
+}

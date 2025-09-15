@@ -1,0 +1,18 @@
+
+#start:disabled {
+    display: none;
+}
+
+#stop:disabled {
+    display: none;
+}
+
+#pony-image {
+    height: 10rem;
+    object-fit: contain;
+    object-position: center;
+}
+
+.silhouette {
+    filter: brightness(0);
+}

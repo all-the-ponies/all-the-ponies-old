@@ -11,7 +11,7 @@
 }
 
 :root {
-    --page-width: 30rem;
+    --page-width: 50rem;
     
     --font-family: "Celestia Medium Redux", Arial, Helvetica, sans-serif;
     --font-size: 1.3rem;
@@ -258,6 +258,17 @@ main {
 
     body:has(.sidebar-toggle > input:checked) main {
         /* display: none; */
+    }
+
+    .title-bar {
+        margin-inline: auto;
+        max-width: var(--page-width);
+        width: 100%;
+    }
+
+    .page-content {
+        margin-inline: auto;
+        width: 100%;
     }
 
     .header:has(.sidebar-toggle > input:checked) {

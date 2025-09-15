@@ -12,6 +12,7 @@ import Quiz from "./quiz/quiz.js"
 import ObjectListPage from "./scripts/components/object-list-page.js"
 import ObjectSearchPage from "./search/search.js"
 import InventoryPage from "./inventory/inventory.js"
+import GuesserPage from "./guesser/guesser.js"
 
 import './scripts/components/game-object.js'
 
@@ -124,6 +125,7 @@ class App {
         inventory: new InventoryPage(),
         
         quiz: new Quiz(),
+        guesser: new GuesserPage(),
     }
 
     get sidebar() {
@@ -136,6 +138,7 @@ class App {
             ['/inventory/', LOC.dictionary.INVENTORY],
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
+            ['/guesser/', {'english': "Who's that pony?"}],
         ]
     }
 
