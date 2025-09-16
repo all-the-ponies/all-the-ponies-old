@@ -522,6 +522,25 @@ main {
     border-color: var(--pink);
 }
 
+.scroll-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: -2em;
+
+    font-size: 3rem;
+    /* width: 50px;
+    z-index: 99; */
+    /* display: none; */
+    /* opacity: 0; */
+
+    transition: bottom ease-in-out 300ms;
+}
+
+.scroll-to-top-show {
+    bottom: 20px;
+    /* display: inline-grid; */
+}
+
 /* dialog */
 
 .dialog {

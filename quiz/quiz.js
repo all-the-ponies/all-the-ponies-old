@@ -3,6 +3,8 @@ import Page from "../scripts/page.js"
 import '../scripts/jquery-3.7.1.min.js'
 
 export default class Quiz extends Page {
+    showScrollToTop = false
+
     async load(path) {
         await super.load(path)
 

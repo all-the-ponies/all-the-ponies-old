@@ -1,4 +1,6 @@
 export default class Page {
+    showScrollToTop = true
+    
     layout = 'layout.html'
 
     constructor() {

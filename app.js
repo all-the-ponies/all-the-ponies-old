@@ -56,6 +56,25 @@ class App {
         }
 
 
+        this.scrollToTopButton = document.getElementById('scrollToTop')
+
+        this.scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            })
+        })
+
+        window.addEventListener('scroll', e => {
+            if (this.currentRoute.showScrollToTop) {
+                if (window.scrollY > 80) {
+                    this.scrollToTopButton.classList.add('scroll-to-top-show')
+                } else {
+                    this.scrollToTopButton.classList.remove('scroll-to-top-show')
+                }
+            }
+        });
+
 
         this.languageSelector = document.getElementById('language')
         this.languageSelector.addEventListener('change', () => {
