@@ -184,7 +184,8 @@ export default class Quiz extends Page {
 
         let seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
         let minutes = Math.floor((timeElapsed % (1000 * 60 * 60)) / (1000 * 60))
-        this.timerElement.text(`${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`)
+        let hours = Math.floor((timeElapsed % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60))
+        this.timerElement.text((hours > 0 ? `${hours}:` : '') + `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`)
     }
 
     showOptionsDialog() {

@@ -1,4 +1,4 @@
-import { pickRandom } from "../scripts/common.js"
+import { LOC, pickRandom } from "../scripts/common.js"
 import Page from "../scripts/page.js"
 
 export default class GuesserPage extends Page {
@@ -22,15 +22,26 @@ export default class GuesserPage extends Page {
         this.hintButton.addEventListener('click', () => this.showHint())
         this.nameInput.addEventListener('input', () => this.checkPony())
 
+        this.ponyImage.addEventListener('load', () => {
+            this.ponyImage.classList.add('silhouette')
+        })
+
         this.currentPony = null
         this.guessedPonies = []
         this.usedHints = []
+    }
+
+    async unload() {
+        await super.unload()
+
+        this.stop()
     }
 
     getRandomPony() {
         this.usedHints = []
         this.descriptionEl.textContent = ''
         this.nameEl.textContent = '???'
+        this.nameInput.value = ''
 
         const ponies = Object.values(gameData.categories.ponies.objects)
         this.currentPony = pickRandom(ponies)
@@ -84,7 +95,8 @@ export default class GuesserPage extends Page {
 
         let seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
         let minutes = Math.floor((timeElapsed % (1000 * 60 * 60)) / (1000 * 60))
-        this.timerEl.textContent = `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`
+        let hours = Math.floor((timeElapsed % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60))
+        this.timerEl.textContent = (hours > 0 ? `${hours}:` : '') + `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`
     }
 
     start() {
@@ -98,8 +110,12 @@ export default class GuesserPage extends Page {
         this.startTime = new Date().getTime()
         this._timerInterval = setInterval(() => this.updateTimer(), 1000)
 
+        this.timerEl.textContent = '0:00'
+        
         this.updateProgress()
         this.getRandomPony()
+
+        this.nameInput.focus()
     }
 
     stop() {
@@ -114,12 +130,12 @@ export default class GuesserPage extends Page {
 
     showPony() {
         this.ponyImage.classList.remove('silhouette')
-        this.nameEl.textContent = app.translate(this.currentPony.name)
+        this.nameEl.textContent = LOC.translate(this.currentPony.name)
+        this.descriptionEl.textContent = LOC.translate(this.currentPony.description)
 
         setTimeout(() => {
-            this.ponyImage.classList.add('silhouette')
             this.getRandomPony()
-        }, 1500)
+        }, 2000)
     }
 
     showHint() {
@@ -134,9 +150,9 @@ export default class GuesserPage extends Page {
                 const name = app.translate(this.currentPony.name)
                 this.descriptionEl.textContent = app.translate(this.currentPony.description).replaceAll(name, '____')
                 
-                break;
+                break
             default:
-                break;
+                break
         }
     }
 }
