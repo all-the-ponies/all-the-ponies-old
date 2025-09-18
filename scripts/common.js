@@ -168,6 +168,9 @@ export function linkHandler(e) {
     const link = e.target.closest('a')
     // console.log('link', link)
     if (link?.tagName == 'A') {
+        if (['_blank', '_parent', '_top'].includes(link.target)) {
+          return
+        }
         const url = new URL(link.href)
         console.log(location)
         console.log(url)

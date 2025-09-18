@@ -1,10 +1,11 @@
-import { LOC, pickRandom } from "../scripts/common.js"
+import { createElement, LOC, pickRandom } from "../scripts/common.js"
 import Page from "../scripts/page.js"
 
 export default class GuesserPage extends Page {
     async load() {
         await super.load()
 
+        this.listEl = document.getElementById('guessedList')
         this.nameInput = document.getElementById('name-input')
         this.nameEl = document.getElementById('name')
         this.descriptionEl = document.getElementById('description')
@@ -37,6 +38,37 @@ export default class GuesserPage extends Page {
         this.stop()
     }
 
+    start() {
+        this.startButton.disabled = true
+        this.stopButton.disabled = false
+        this.skipButton.disabled = false
+        this.nameInput.disabled = false
+        this.hintButton.disabled = false
+        this.currentPony = null
+        this.guessedPonies = []
+        this.startTime = new Date().getTime()
+        this._timerInterval = setInterval(() => this.updateTimer(), 1000)
+
+        this.timerEl.textContent = '0:00'
+
+        this.listEl.replaceChildren()
+        
+        this.updateProgress()
+        this.getRandomPony()
+
+        this.nameInput.focus()
+    }
+
+    stop() {
+        this.startButton.disabled = false
+        this.stopButton.disabled = true
+        this.nameInput.disabled = true
+        this.hintButton.disabled = true
+        this.skipButton.disabled = true
+
+        clearInterval(this._timerInterval)
+    }
+
     getRandomPony() {
         this.usedHints = []
         this.descriptionEl.textContent = ''
@@ -64,6 +96,7 @@ export default class GuesserPage extends Page {
         if (ponyName == guessedName) {
             this.nameInput.value = ''
             this.guessedPonies.push(this.currentPony.id)
+            this.addToList()
             this.updateProgress()
             this.showPony()
             return
@@ -77,6 +110,7 @@ export default class GuesserPage extends Page {
                 if (ponyName == guessedName) {
                     this.nameInput.value = ''
                     this.guessedPonies.push(this.currentPony.id)
+                    this.addToList()
                     this.updateProgress()
                     this.showPony()
                     return
@@ -97,35 +131,6 @@ export default class GuesserPage extends Page {
         let minutes = Math.floor((timeElapsed % (1000 * 60 * 60)) / (1000 * 60))
         let hours = Math.floor((timeElapsed % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60))
         this.timerEl.textContent = (hours > 0 ? `${hours}:` : '') + `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`
-    }
-
-    start() {
-        this.startButton.disabled = true
-        this.stopButton.disabled = false
-        this.skipButton.disabled = false
-        this.nameInput.disabled = false
-        this.hintButton.disabled = false
-        this.currentPony = null
-        this.guessedPonies = []
-        this.startTime = new Date().getTime()
-        this._timerInterval = setInterval(() => this.updateTimer(), 1000)
-
-        this.timerEl.textContent = '0:00'
-        
-        this.updateProgress()
-        this.getRandomPony()
-
-        this.nameInput.focus()
-    }
-
-    stop() {
-        this.startButton.disabled = false
-        this.stopButton.disabled = true
-        this.nameInput.disabled = true
-        this.hintButton.disabled = true
-        this.skipButton.disabled = true
-
-        clearInterval(this._timerInterval)
     }
 
     showPony() {
@@ -154,5 +159,33 @@ export default class GuesserPage extends Page {
             default:
                 break
         }
+    }
+
+    addToList() {
+        let link = `/pony/${this.currentPony.id}/`
+        let element = createElement('div', {
+                class: 'pony-entry'
+            }, [
+                createElement('a', {
+                    href: link,
+                    target: '_blank',
+                    class: 'link',
+                }, [
+                    createElement('img', {
+                        src: this.currentPony.image.portrait,
+                        alt: LOC.translate(this.currentPony.name),
+                    })
+                ]),
+                createElement('a', {
+                    href: link,
+                    target: '_blank',
+                    class: 'link',
+                    textContent: LOC.translate(this.currentPony.name),
+                })
+            ])
+        console.log('added', element)
+        this.listEl.prepend(
+            element
+        )
     }
 }

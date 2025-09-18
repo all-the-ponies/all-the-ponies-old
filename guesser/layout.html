@@ -11,19 +11,25 @@
     <button class="button button-green" id="stop" disabled>Stop</button>
 </div>
 
-<div id="game">
-    <div>
-        Guessed correctly: <span id="progress">0</span>
-        time: <span id="timer">0:00</span>
+<div class="game-container">
+    <div id="game">
+        <div>
+            Guessed correctly: <span id="progress">0</span>
+            time: <span id="timer">0:00</span>
+        </div>
+        <div class="game-bar">
+            <textarea rows="1" disabled name="name-input" id="name-input" class="search-box name-input" placeholder="Name"></textarea>
+            <button class="button button-green" id="skip" disabled>Skip</button>
+            <button class="button button-green" id="hint" disabled>Hint</button>
+        </div>
+        <div id="pony">
+            <h2 id="name">???</h2>
+            <img src="" alt="" id="pony-image" class="silhouette" draggable="false">
+            <div id="description"></div>
+        </div>
     </div>
-    <div class="game-bar">
-        <textarea rows="1" disabled name="name-input" id="name-input" class="search-box" placeholder="Name"></textarea>
-        <button class="button button-green" id="skip" disabled>Skip</button>
-        <button class="button button-green" id="hint" disabled>Hint</button>
-    </div>
-    <div id="pony">
-        <h2 id="name">???</h2>
-        <img src="" alt="" id="pony-image" class="silhouette" draggable="false">
-        <div id="description"></div>
+    <div class="guessed-list-container">
+        <span class="guessed-list-title">Correct guesses</span>
+        <div id="guessedList" class="guessed-list"></div>
     </div>
 </div>

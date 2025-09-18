@@ -1,3 +1,20 @@
+.game-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+.game-bar {
+    background: var(--page-background-color);
+    display: flex;
+    position: sticky;
+    top: 0;
+    padding: 0.5rem;
+    z-index: 1;
+}
+
+.name-input {
+    flex: 1;
+}
 
 #start:disabled {
     display: none;
@@ -15,4 +32,24 @@
 
 .silhouette {
     filter: brightness(0);
+}
+
+/* guessed ponies list */
+
+.guessed-list {
+    /* height: 50%; */
+    overflow-y: auto;
+}
+
+.pony-entry {
+    display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   margin: 1rem;
+}
+
+.pony-entry img {
+    height: 2em;
+    object-fit: contain;
+    object-position: center;
 }
