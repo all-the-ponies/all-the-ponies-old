@@ -144,6 +144,7 @@ def track(
         yield from progress.track(
             sequence = sequence,
             description = description,
+            total = total,
         )
 
 def check_wiki(name: str, result: Optional[dict] = None, check: bool = False):
