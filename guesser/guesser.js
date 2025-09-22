@@ -76,6 +76,13 @@ export default class GuesserPage extends Page {
     }
 
     getRandomPony() {
+        const checks = [
+            (pony) => this.guessedPonies.includes(pony.id),
+            (pony) => !(pony.group.length == 0 || !pony.group_master),
+            (pony) => pony.tags.includes('npc'),
+            (pony) => pony.tags.includes('quest'),
+        ]
+
         this.usedHints = []
         this.descriptionEl.textContent = ''
         this.nameEl.textContent = '???'
@@ -84,11 +91,11 @@ export default class GuesserPage extends Page {
         const ponies = Object.values(gameData.categories.ponies.objects)
         this.currentPony = pickRandom(ponies)
         console.log('pony', this.currentPony)
-        while (
-            this.guessedPonies.includes(this.currentPony.id) &&
-            (this.currentPony.group.length == 0 || (this.currentPony.group.length && this.currentPony.group_master))
-        ) {
+        console.log(checks.map(((f) => f(this.currentPony))))
+        while (checks.some(((f) => f(this.currentPony)))) {
             this.currentPony = pickRandom(ponies)
+            console.log(this.currentPony)
+            console.log(checks.map(((f) => f(this.currentPony))))
         }
 
         this.createSilhouette()
@@ -96,6 +103,9 @@ export default class GuesserPage extends Page {
 
     createSilhouette() {
         this.ponyImage.src = this.currentPony.image.full
+
+        this.skipButton.disabled = false
+        this.hintButton.disabled = false
     }
 
     checkPony() {
@@ -145,6 +155,9 @@ export default class GuesserPage extends Page {
     }
 
     showPony() {
+        this.skipButton.disabled = true
+        this.hintButton.disabled = true
+
         this.ponyImage.classList.remove('silhouette')
         this.nameEl.textContent = LOC.translate(this.currentPony.name)
         this.descriptionEl.textContent = LOC.translate(this.currentPony.description)
