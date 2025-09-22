@@ -531,6 +531,7 @@ class GetGameData:
                 group = list(filter(lambda id: id != '', group))
                 if len(group):
                     group.insert(0, pony.id)
+                    pony_info['group_master'] = True
                 
                 for id in group:
                     groups[id] = group
@@ -622,6 +623,7 @@ class GetGameData:
                     'house': pony_info['house'],
                     'inns': pony_info['inns'],
                     'changeling': pony_info['changeling'],
+                    'group_master': pony_info.get('group_master', False),
                     'group': pony_info['group'],
                     'max_level': pony_info['max_level'],
                     'rewards': pony_info['rewards'],

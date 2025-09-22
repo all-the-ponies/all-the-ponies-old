@@ -78,7 +78,10 @@ export default class GuesserPage extends Page {
         const ponies = Object.values(gameData.categories.ponies.objects)
         this.currentPony = pickRandom(ponies)
         console.log('pony', this.currentPony)
-        while (this.guessedPonies.includes(this.currentPony.id)) {
+        while (
+            this.guessedPonies.includes(this.currentPony.id) &&
+            (this.currentPony.group.length == 0 || (this.currentPony.group.length && this.currentPony.group_master))
+        ) {
             this.currentPony = pickRandom(ponies)
         }
 
@@ -187,5 +190,7 @@ export default class GuesserPage extends Page {
         this.listEl.prepend(
             element
         )
+
+        
     }
 }
