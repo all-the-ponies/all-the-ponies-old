@@ -19,8 +19,14 @@ export default class GuesserPage extends Page {
 
         this.startButton.addEventListener('click', () => this.start())
         this.stopButton.addEventListener('click', () => this.stop())
-        this.skipButton.addEventListener('click', () => this.showPony())
-        this.hintButton.addEventListener('click', () => this.showHint())
+        this.skipButton.addEventListener('click', () => {
+            this.showPony()
+            this.nameInput.focus()
+        })
+        this.hintButton.addEventListener('click', () => {
+            this.showHint()
+            this.nameInput.focus()
+        })
         this.nameInput.addEventListener('input', () => this.checkPony())
 
         this.ponyImage.addEventListener('load', () => {
