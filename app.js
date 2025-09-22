@@ -67,7 +67,7 @@ class App {
 
         window.addEventListener('scroll', e => {
             if (this.currentRoute.showScrollToTop) {
-                if (window.scrollY > 80) {
+                if (window.scrollY > 160) {
                     this.scrollToTopButton.classList.add('scroll-to-top-show')
                 } else {
                     this.scrollToTopButton.classList.remove('scroll-to-top-show')
@@ -123,10 +123,6 @@ class App {
 
     translate(string) {
         return LOC.translate(string)
-        if (this.language in string) {
-            return string[this.language]
-        }
-        return string['english']
     }
 
     routes = {

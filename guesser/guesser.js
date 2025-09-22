@@ -151,7 +151,7 @@ export default class GuesserPage extends Page {
         let seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
         let minutes = Math.floor((timeElapsed % (1000 * 60 * 60)) / (1000 * 60))
         let hours = Math.floor((timeElapsed % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60))
-        this.timerEl.textContent = (hours > 0 ? `${hours}:` : '') + `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`
+        this.timerEl.textContent = (hours > 0 ? `${hours}:` : minutes.toString().length == 1 ? '0' : '') + `${minutes}:${seconds.toString().length == 1 ? '0' : ''}${seconds}`
     }
 
     showPony() {
