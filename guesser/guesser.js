@@ -93,6 +93,8 @@ export default class GuesserPage extends Page {
     }
 
     checkPony() {
+        this.nameInput.value = this.nameInput.value.replaceAll('\n', '')
+
         let guessedName = gameData.transformName(this.nameInput.value)
         let ponyName = gameData.transformName(app.translate(this.currentPony.name))
 
