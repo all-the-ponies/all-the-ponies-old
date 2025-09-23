@@ -31,6 +31,11 @@ export default class GuesserPage extends Page {
 
         this.ponyImage.addEventListener('load', () => {
             this.ponyImage.classList.add('silhouette')
+
+            this.skipButton.disabled = false
+            this.hintButton.disabled = false
+            this.descriptionEl.textContent = ''
+            this.nameEl.textContent = '???'
         })
 
         this.currentPony = null
@@ -84,8 +89,6 @@ export default class GuesserPage extends Page {
         ]
 
         this.usedHints = []
-        this.descriptionEl.textContent = ''
-        this.nameEl.textContent = '???'
         this.nameInput.value = ''
 
         const ponies = Object.values(gameData.categories.ponies.objects)
@@ -103,9 +106,6 @@ export default class GuesserPage extends Page {
 
     createSilhouette() {
         this.ponyImage.src = this.currentPony.image.full
-
-        this.skipButton.disabled = false
-        this.hintButton.disabled = false
     }
 
     checkPony() {
