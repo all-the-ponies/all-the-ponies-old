@@ -195,7 +195,7 @@ export function createElement(tagName, attrs = {}, children = []) {
   }
 
   for (let child of children) {
-    element.appendChild(child)
+    element.append(child)
   }
 
   return element
