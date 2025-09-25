@@ -417,6 +417,12 @@ main {
     --shadow-color: var(--red-dark);
 }
 
+.button-pink {
+    --top-color: var(--pink-light);
+    --bottom-color: var(--pink);
+    --shadow-color: var(--pink-dark);
+}
+
 .button-orange {
     --top-color: var(--orange-light);
     --bottom-color: var(--orange);
@@ -590,6 +596,18 @@ main {
     border-radius: 0.2em;
 }
 
+.dialog-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    translate: 50% -50%;
+
+    font-size: 2rem;
+    /* padding: 0.3em; */
+    width: 1.2em;
+    height: 1.2em;
+}
+
 .dialog-confirmation {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -604,6 +622,8 @@ main {
 .dialog .options-group {
     display: flex;
     flex-direction: column;
+    gap: 0.2rem;
+    margin: 1rem;
 }
 
 /* form stuff */
