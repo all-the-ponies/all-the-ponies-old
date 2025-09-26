@@ -1,7 +1,7 @@
 import { isLocalhost } from "./common.js"
 
 const API_DOMAIN = !isLocalhost()
-    ? 'http://all-the-ponies-api.vercel.app/'
+    ? 'https://all-the-ponies-api.vercel.app/'
     : (() => {
         const url = new URL(location.origin)
         url.port = '5501'
