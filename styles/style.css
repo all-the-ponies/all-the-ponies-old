@@ -338,6 +338,12 @@ main {
     text-decoration: underline;
 }
 
+
+.text-green {
+    color: var(--green);
+}
+
+
 .button {
     font-size: 1.3rem;
 
