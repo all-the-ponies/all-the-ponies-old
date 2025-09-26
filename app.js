@@ -4,6 +4,7 @@ import SaveManager from "./scripts/saveManager.js"
 import '/scripts/jquery-3.7.1.min.js'
 
 import Index from "./index.js"
+import AboutPage from "./about/about.js"
 import PonyPage from "./pony/pony.js"
 import HousePage from "./house/house.js"
 import ShopPage from "./shop/shop.js"
@@ -128,6 +129,8 @@ class App {
 
     routes = {
         '': new Index(),
+        about: new Index(),
+
         search: searchPage,
         ponies: searchPage,
         houses: searchPage,
@@ -155,6 +158,8 @@ class App {
             '~',
             ['/quiz/', {'english': 'Pony quiz'}],
             ['/guesser/', {'english': "Who's that pony?"}],
+            '~',
+            ['/about/', {'english': "About"}],
         ]
     }
 

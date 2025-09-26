@@ -322,6 +322,11 @@ main {
 
 /* Elements */
 
+.list {
+    margin-left: 2rem;
+}
+
+
 .page-content .link {
     color: var(--pink);
     text-decoration: none;
