@@ -3,7 +3,13 @@
 
  <h1>Inventory</h1>
 
-<div id="stats"></div>
+<div class="inventory-info">
+    <div id="stats"></div>
+    <div class="import-export">
+        <button id="import-button" class="button button-blue">Import</button>
+        <button style="display: none;" id="export-button" class="button button-blue">Export</button>
+    </div>
+</div>
 
 <div id="search-section">
     <div class="search-container">
@@ -58,6 +64,45 @@
                 <button class="button button-green" type="submit" value="ok" formmethod="dialog">OK</button>
             </div>
         </form>
+    </div>
+</dialog>
+
+<dialog id="import-dialog" class="dialog">
+    <h1 class="dialog-header">Import</h1>
+    <form action="dialog">
+        <button class="button-circle button-pink dialog-close" type="submit" formmethod="dialog">X</button>
+    </form>
+    <div class="dialog-body">
+        <div class="form-options">
+            <label>
+                Friend code
+                <input type="text" class="search-box" name="friend-code-input" id="friend-code-input" placeholder="Friend code">
+                <!-- <textarea class="search-box" name="friend-code-input" id="friend-code-input" placeholder="Friend code"></textarea> -->
+            </label>
+            <div id="import-message"></div>
+        </div>
+        <button id="import-submit-button" class="button button-blue" type="submit" value="import" formmethod="dialog">Import</button>
+    </div>
+</dialog>
+
+<dialog id="export-dialog" class="dialog">
+    <h1 class="dialog-header">Export</h1>
+    <form action="dialog">
+        <button class="button-circle button-pink dialog-close" type="submit" formmethod="dialog">X</button>
+    </form>
+    <div class="dialog-body">
+        <div class="form-options">
+
+            <label>
+                Format
+                <select class="dropdown" name="format-selector" id="export-format-selector">
+                    <option value="json" selected>json</option>
+                    <option value="csv">csv</option>
+                </select>
+            </label>
+            <div id="export-format-options"></div>
+        </div>
+        <button class="button button-blue" type="submit" value="export">Export</button>
     </div>
 </dialog>
 

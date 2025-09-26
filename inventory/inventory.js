@@ -151,6 +151,9 @@ export default class InventoryPage extends Page {
             this.createSearchCards()
         })
 
+        this.initImportDialog()
+        this.initExportDialog()
+
 
         this.searchBar.on('input', () => this.updateSearch())
 
@@ -553,5 +556,91 @@ export default class InventoryPage extends Page {
                 ])
             )
         }
+    }
+
+    initExportDialog() {
+        const exportDialogButton = document.getElementById('export-button')
+        const exportDialog = document.getElementById('export-dialog')
+        const exportFormatSelector = document.getElementById('export-format-selector')
+        const optionsElement = document.getElementById('export-format-options')
+
+        exportDialogButton.addEventListener('click', () => exportDialog.showModal())
+
+        exportFormatSelector.addEventListener('change', () => {
+            optionsElement.replaceChildren()
+
+            switch (exportFormatSelector.value) {
+                case 'json':
+                    break
+                case 'csv':
+                    const categorySelector = createElement('select', {
+                            class: 'dropdown',
+                            id: 'export-format-category',
+                        }, [
+                            createElement('option', {
+                                value: 'ponies',
+                                textContent: LOC.translate(CATEGORIES['ponies'].string),
+                            }),
+                            createElement('option', {
+                                value: 'houses',
+                                textContent: LOC.translate(CATEGORIES['houses'].string),
+                            }),
+                            createElement('option', {
+                                value: 'shops',
+                                textContent: LOC.translate(CATEGORIES['shops'].string),
+                            }),
+                        ])
+                    optionsElement.appendChild(
+                        createElement('label', {}, [
+                            'Category',
+                            categorySelector,
+                        ])
+                    )
+                    break
+                default:
+                    break
+            }
+        })
+        
+    }
+
+    updateExportFormat() {
+        const optionsElement = document.getElementById('export-format-options')
+
+        optionsElement.replaceChildren()
+    }
+
+    initImportDialog() {
+        const importButton = document.getElementById('import-button')
+        const importDialog = document.getElementById('import-dialog')
+        const friendCodeInput = document.getElementById('friend-code-input')
+        const importMessage = document.getElementById('import-message')
+        const importSubmitButton = document.getElementById('import-submit-button')
+        // const importCloseButton = 
+
+        importButton.addEventListener('click', () => {
+            importDialog.showModal()
+            importSubmitButton.disabled = false
+            importMessage.innerText = ''
+
+        })
+
+        importSubmitButton.addEventListener('click', () => {
+            const friendCode = friendCodeInput.value
+            importSubmitButton.disabled = true
+            importMessage.innerText = ''
+            saveManager.importFromCloud(friendCode)
+                .then(() => {
+                    this.update()
+                    importDialog.close()
+                })
+                .catch((error) => {
+                    importMessage.innerText = error.toString()
+                })
+                .finally(() => {
+                    importSubmitButton.disabled = false
+                })
+        })
+        
     }
 }

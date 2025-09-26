@@ -18,6 +18,7 @@ import './scripts/components/game-object.js'
 
 import { linkHandler, LOC, setURL } from "./scripts/common.js"
 
+
 window.LOC = new Localization('/assets/json/localization.json')
 window.gameData = new GameData('/assets/json/game-data.json')
 window.saveManager = new SaveManager()

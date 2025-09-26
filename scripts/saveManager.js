@@ -1,3 +1,5 @@
+import api from "./api.js"
+
 export default class SaveManager {
     STRUCTURE = {
         version: 1,
@@ -20,9 +22,13 @@ export default class SaveManager {
     localStorageKey = 'save'
     
     constructor() {
-        this.data = structuredClone(this.STRUCTURE)
+        this.reset()
 
         this.loadFromLocalStorage()
+    }
+
+    reset() {
+        this.data = structuredClone(this.STRUCTURE)
     }
 
     loadFromLocalStorage() {
@@ -107,5 +113,27 @@ export default class SaveManager {
         }
 
         this.saveToLocalStorage()
+    }
+
+    async importFromCloud(friendCode) {
+        const saveData = await api.getSave(friendCode)
+
+        if ('detail' in saveData) {
+            throw Error(saveData['detail'])
+        }
+        
+        this.reset()
+
+        for (let pony of saveData.inventory.ponies) {
+            this.setOwned(
+                pony.id
+            )
+        }
+
+        for (let shopId of saveData.inventory.shops) {
+            this.setOwned(
+                shopId
+            )
+        }
     }
 }
