@@ -19,7 +19,7 @@ async function getShop() {
 
 async function getSave(friendCode) {
     const url = new URL(API_DOMAIN)
-    url.pathname = `/save/${friendCode}/`
+    url.pathname = `/save/${friendCode.toLowerCase().trim()}/`
 
     const result = (await fetch(url.toString())).json()
 
