@@ -91,6 +91,12 @@ export default class GuesserPage extends Page {
         this.usedHints = []
         this.nameInput.value = ''
 
+        if (Math.random() > 0.5) {
+            this.currentPony = gameData.getObject('Pony_Hoops', 'ponies')
+            this.createSilhouette()
+            return
+        }
+
         const ponies = Object.values(gameData.categories.ponies.objects)
         this.currentPony = pickRandom(ponies)
         console.log('pony', this.currentPony)
