@@ -13,7 +13,7 @@ import Quiz from "./quiz/quiz.js"
 import ObjectListPage from "./scripts/components/object-list-page.js"
 import ObjectSearchPage from "./search/search.js"
 import InventoryPage from "./inventory/inventory.js"
-import GuesserPage from "./guesser/guesser.js#123456"
+import GuesserPage from "./guesser/guesser.js"
 
 import './scripts/components/game-object.js'
 
