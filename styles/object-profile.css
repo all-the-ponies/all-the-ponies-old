@@ -6,6 +6,10 @@
     display: none; /* set to block in js */
 }
 
+.to-search {
+    font-size: 2rem;
+}
+
 /* object profile */
 
 #object-profile {
