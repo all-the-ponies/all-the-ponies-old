@@ -55,7 +55,7 @@ export default class GuesserPage extends Page {
         // return
 
         const checks = [
-            (pony) => !(pony.group.length == 0 || !pony.group_master),
+            (pony) => !(pony.group.length == 0 || pony.group_master),
             (pony) => pony.tags.includes('npc'),
             (pony) => pony.tags.includes('quest'),
         ]
