@@ -343,6 +343,10 @@ main {
     color: var(--green);
 }
 
+.text-pink {
+    color: var(--pink);
+}
+
 
 .button {
     font-size: 1.3rem;
@@ -625,8 +629,14 @@ main {
     gap: 0.5em;
 }
 
+.dialog-single-confirmation {
+    justify-self: center;
+}
+
 .dialog-body {
     color: var(--blue);
+    width: min-content;
+    min-width: 20rem;
 }
 
 .dialog .form-options,

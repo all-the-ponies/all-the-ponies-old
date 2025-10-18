@@ -39,6 +39,7 @@ export default class GuesserPage extends Page {
         })
 
         this.currentPony = null
+        this.ponies = []
         this.guessedPonies = []
         this.usedHints = []
     }
@@ -47,6 +48,24 @@ export default class GuesserPage extends Page {
         await super.unload()
 
         this.stop()
+    }
+
+    makePonyList() {
+        // this.ponies = [gameData.getObject('Pony_Twilight_Sparkle'), gameData.getObject('Pony_Muffins')]
+        // return
+
+        const checks = [
+            (pony) => !(pony.group.length == 0 || !pony.group_master),
+            (pony) => pony.tags.includes('npc'),
+            (pony) => pony.tags.includes('quest'),
+        ]
+
+        this.ponies = []
+        for (let pony of Object.values(gameData.categories.ponies.objects)) {
+            if (!checks.some(((f) => f(pony)))) {
+                this.ponies.push(pony)
+            }
+        }
     }
 
     start() {
@@ -63,6 +82,8 @@ export default class GuesserPage extends Page {
         this.timerEl.textContent = '0:00'
 
         this.listEl.replaceChildren()
+
+        this.makePonyList()
         
         this.updateProgress()
         this.getRandomPony()
@@ -80,7 +101,22 @@ export default class GuesserPage extends Page {
         clearInterval(this._timerInterval)
     }
 
+    win() {
+        this.stop()
+
+        const winDialog = document.getElementById('win-dialog')
+        const winTimeEl = document.getElementById('win-time')
+        winTimeEl.textContent = this.timerEl.textContent
+        console.log('time', this.timerEl.textContent)
+        winDialog.showModal()
+    }
+
     getRandomPony() {
+        if (this.guessedPonies.length >= this.ponies.length) {
+            this.win()
+            return
+        }
+
         const checks = [
             (pony) => this.guessedPonies.includes(pony.id),
             (pony) => !(pony.group.length == 0 || !pony.group_master),
@@ -91,14 +127,13 @@ export default class GuesserPage extends Page {
         this.usedHints = []
         this.nameInput.value = ''
 
-        const ponies = Object.values(gameData.categories.ponies.objects)
-        this.currentPony = pickRandom(ponies)
+        this.currentPony = pickRandom(this.ponies)
         console.log('pony', this.currentPony)
-        console.log(checks.map(((f) => f(this.currentPony))))
-        while (checks.some(((f) => f(this.currentPony)))) {
-            this.currentPony = pickRandom(ponies)
+        console.log(this.guessedPonies.includes(this.currentPony.id))
+        while (this.guessedPonies.includes(this.currentPony.id)) {
+            this.currentPony = pickRandom(this.ponies)
             console.log(this.currentPony)
-            console.log(checks.map(((f) => f(this.currentPony))))
+            console.log(this.guessedPonies.includes(this.currentPony.id))
         }
 
         this.createSilhouette()
@@ -141,7 +176,7 @@ export default class GuesserPage extends Page {
     }
 
     updateProgress() {
-        this.progressEl.textContent = this.guessedPonies.length
+        this.progressEl.textContent = `${this.guessedPonies.length}/${this.ponies.length}`
     }
 
     updateTimer() {

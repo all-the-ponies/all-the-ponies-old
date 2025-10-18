@@ -24,7 +24,10 @@
         </div>
         <div id="pony">
             <h2 id="name">???</h2>
-            <img src="" alt="" id="pony-image" class="silhouette" draggable="false">
+            <div class="image-container">
+                
+                <img src="" alt="" id="pony-image" class="silhouette" draggable="false">
+            </div>
             <div id="description"></div>
         </div>
     </div>
@@ -33,3 +36,20 @@
         <div id="guessedList" class="guessed-list"></div>
     </div>
 </div>
+
+
+<dialog id="win-dialog" class="dialog">
+    <h1 class="dialog-header">You Win!</h1>
+    <div class="dialog-body">
+        <form action="dialog">
+            <div style="text-align: center;">
+                Congratulations on getting all the ponies! You time was <span class="text-pink" id="win-time"></span>.
+            </div>
+            <div class="form-options">
+            </div>
+            <div class="dialog-single-confirmation">
+                <button class="button button-blue" type="submit" value="ok" formmethod="dialog">Close</button>
+            </div>
+        </form>
+    </div>
+</dialog>
