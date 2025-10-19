@@ -18,7 +18,8 @@ export default class DecorPage extends ObjectProfilePage {
 
         document.querySelector('[data-object-info="town"]').textContent = toTitleCase(LOC.translate(decor.location))
         document.querySelector('[data-object-info="xp"]').textContent = decor.xp
-        document.querySelector('[data-object-info="unlock-level"]').textContent = `${decor.grid_size}x${decor.grid_size}`
+        document.querySelector('[data-object-info="unlock-level"]').textContent = decor.unlock_level
+        document.querySelector('[data-object-info="grid-size"]').textContent = `${decor.grid_size}x${decor.grid_size}`
         document.querySelector('[data-object-info="xp"]').textContent = decor.xp
 
         document.querySelector('[data-object-info="fusion-points"]').textContent = decor.fusion_points || "Cannot fuse"
