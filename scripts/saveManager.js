@@ -3,6 +3,7 @@ import api from "./api.js"
 export default class SaveManager {
     STRUCTURE = {
         version: 1,
+        total_playtime: 0,
         inventory: {
             categories: {
                 ponies: {},
@@ -123,6 +124,8 @@ export default class SaveManager {
         }
         
         this.reset()
+
+        this.data.total_playtime = saveData.total_playtime
 
         for (let pony of saveData.inventory.ponies) {
             this.setOwned(

@@ -1,4 +1,4 @@
-import { loadJSON, createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase, setURL, CATEGORIES, getCurrentScroll } from "../scripts/common.js";
+import { loadJSON, createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase, setURL, CATEGORIES, getCurrentScroll, formatTime } from "../scripts/common.js";
 import Page from "../scripts/page.js"
 import '../scripts/jquery-3.7.1.min.js'
 
@@ -292,6 +292,12 @@ export default class InventoryPage extends Page {
         for (let [stat, value] of Object.entries(stats)) {
             const span = document.createElement('span')
             span.textContent = `${toTitleCase(LOC.translate(CATEGORIES[stat].string))}: ${value}`
+            statsText.push(span)
+        }
+
+        if (saveManager.data.total_playtime) {
+            const span = document.createElement('span')
+            span.textContent = `${toTitleCase(LOC.translate('TOTAL_PLAYTIME'))}: ${formatTime(saveManager.data.total_playtime)}`
             statsText.push(span)
         }
         
