@@ -72,6 +72,8 @@ class GameObject extends HTMLElement {
             } else {
                 imageUrl = this.objectInfo.image.portrait
             }
+        } else if (this.objectInfo.category == 'avatars') {
+            imageUrl = this.objectInfo.image.preview
         } else {
             imageUrl = this.objectInfo.image
         }

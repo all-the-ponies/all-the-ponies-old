@@ -62,6 +62,7 @@ UNUSED_PONIES = [
     'Pony_Wingless_Rainbow_Dash',
     'Pony_Crystal_Luna_Hair_Test',
     'Pony_Token_Test',
+    'Pony_Bushel',
 ]
 
 WIKI_URLS = {
@@ -309,6 +310,7 @@ class GetGameData:
         self.get_houses()
         self.get_decorations()
         self.get_tokens()
+        self.get_avatars()
         self.get_items()
 
         self.get_group_quests()
@@ -1053,6 +1055,59 @@ class GetGameData:
         for pony in random_pros:
             self.categories['ponies']['objects'][pony]['pro'] = 'random'
 
+    def get_avatars(self):
+        self.categories.setdefault('avatars', {})
+        self.categories['avatars']['name'] = translate(
+            'STR_AVATAR_ICONS',
+            self.loc_files,
+            self.categories['avatars'].get('name', {}),
+        )
+
+        avatars: dict = self.categories['avatars'].setdefault('objects', {})
+
+        
+        os.makedirs(os.path.join(self.images_folder, 'avatars', 'main'), exist_ok = True)
+        os.makedirs(os.path.join(self.images_folder, 'avatars', 'preview'), exist_ok = True)
+
+        for index, avatar in track(
+            enumerate(self.gameobjectdata['ProfileAvatar'].values()),
+            description = 'Getting avatars...',
+            total = len(self.gameobjectdata['ProfileAvatar']),
+        ):
+            avatar_info: dict = avatars.setdefault(avatar.id, {})
+
+            avatar_info['index'] = index
+            avatar_info.setdefault('locked', False)
+            
+            avatar_info['name'] = translate(
+                avatar.get('Shop', {}).get('Label', avatar.id),
+                self.loc_files,
+                avatar_info.get('name', {}),
+                avatar_info.get('locked', False),
+            )
+
+            avatar_info['image'] = {}
+            
+            image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'avatars', 'preview', f'{avatar.id}.png')))
+            avatar_info['image']['preview'] = '/' + image_path
+        
+            image_name = os.path.splitext(avatar.get('Shop', {}).get('Icon', ''))[0]
+            image_source = os.path.join(self.game_folder, image_name)
+
+            if not self.no_images:
+                self.save_image(image_source, image_path)
+            
+            image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'avatars', 'main', f'{avatar.id}.png')))
+            avatar_info['image']['main'] = '/' + image_path
+        
+            image_name = os.path.splitext(avatar.get('Settings', {}).get('PictureActive', ''))[0]
+            image_source = os.path.join(self.game_folder, image_name)
+
+            if not self.no_images:
+                self.save_image(image_source, image_path)
+            
+            avatar_info['is_default'] = avatar.get('Settings', {}).get('IsDefault', 0) == 1
+            avatar_info['pony'] = avatar.get('Settings', {}).get('PonyStarsID', '')
 
 def main():
     argparser = argparse.ArgumentParser()
