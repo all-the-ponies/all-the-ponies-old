@@ -129,8 +129,6 @@ export default class SaveManager {
         if ('detail' in saveData) {
             throw Error(saveData['detail'])
         }
-
-        console.log('saveData', saveData)
         
         this.reset()
 
@@ -149,8 +147,6 @@ export default class SaveManager {
                 shopId
             )
         }
-
-        console.log('new data', this.data)
     }
 
     export(format, options = {}) {

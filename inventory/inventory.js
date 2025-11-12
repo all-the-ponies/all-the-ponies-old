@@ -285,7 +285,7 @@ export default class InventoryPage extends Page {
             let objects = window.saveManager.data.inventory.categories[category] || []
             stats[category] = Object.keys(objects).length
         }
-        console.log('stats', stats)
+        // console.log('stats', stats)
 
         let statsText = []
 
@@ -355,7 +355,7 @@ export default class InventoryPage extends Page {
             ids = Object.keys(saveManager.data.inventory.categories[this.category] || {})
         }
 
-        console.log('ids', ids)
+        // console.log('ids', ids)
         if (ids.length == 0) {
             this.searchResultsElement[0].replaceChildren()
             this.setNoneText()
@@ -475,7 +475,7 @@ export default class InventoryPage extends Page {
 
     async createFilterOption() {
         const options = this.filters[this.category]
-        console.log('options', options, this.category)
+        // console.log('options', options, this.category)
         const optionsElement = document.querySelector('#filters-dialog .form-options')
         optionsElement.replaceChildren()
         if (!options) {
@@ -483,7 +483,7 @@ export default class InventoryPage extends Page {
         }
 
         for (let [option, info] of Object.entries(options)) {
-            console.log('option', option, info)
+            // console.log('option', option, info)
             switch (info.type) {
                 case 'bool':
                     optionsElement.append(
@@ -612,7 +612,7 @@ export default class InventoryPage extends Page {
 
                     categorySelector.addEventListener('change', e => {
                         options.category = categorySelector.value
-                        console.log('category', options.value)
+                        // console.log('category', options.value)
                     })
                     break
                 default:

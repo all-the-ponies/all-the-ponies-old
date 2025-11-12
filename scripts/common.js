@@ -156,9 +156,8 @@ export function setUrlParameter(param, value, replace = false) {
 }
 
 export function getUrlParameter(param) {
-    const url = new URL(location.href)
-    const value = url.searchParams.get(param)
-    console.log(value)
+  const url = new URL(location.href)
+  const value = url.searchParams.get(param)
   return value == null ? null : decodeURIComponent(value)
 }
 
@@ -172,8 +171,8 @@ export function linkHandler(e) {
           return
         }
         const url = new URL(link.href)
-        console.log(location)
-        console.log(url)
+        // console.log(location)
+        // console.log(url)
         if (url.origin == location.origin) {
             e.preventDefault()
             setURL(link.href)
