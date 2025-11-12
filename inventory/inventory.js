@@ -1,4 +1,4 @@
-import { loadJSON, createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase, setURL, CATEGORIES, getCurrentScroll, formatTime } from "../scripts/common.js";
+import { loadJSON, createElement, getUrlParameter, LOC, setUrlParameter, toTitleCase, setURL, CATEGORIES, getCurrentScroll, formatTime, downloadFile } from "../scripts/common.js";
 import Page from "../scripts/page.js"
 import '../scripts/jquery-3.7.1.min.js'
 
@@ -569,10 +569,13 @@ export default class InventoryPage extends Page {
         const exportDialog = document.getElementById('export-dialog')
         const exportFormatSelector = document.getElementById('export-format-selector')
         const optionsElement = document.getElementById('export-format-options')
+        const exportSubmitButton = document.getElementById('export-submit-button')
 
         exportDialogButton.addEventListener('click', () => exportDialog.showModal())
 
-        exportFormatSelector.addEventListener('change', () => {
+        const options = {}
+
+        const updateOptions = () => {
             optionsElement.replaceChildren()
 
             switch (exportFormatSelector.value) {
@@ -590,10 +593,12 @@ export default class InventoryPage extends Page {
                             createElement('option', {
                                 value: 'houses',
                                 textContent: LOC.translate(CATEGORIES['houses'].string),
+                                disabled: true,
                             }),
                             createElement('option', {
                                 value: 'shops',
                                 textContent: LOC.translate(CATEGORIES['shops'].string),
+                                disabled: true,
                             }),
                         ])
                     optionsElement.appendChild(
@@ -602,12 +607,33 @@ export default class InventoryPage extends Page {
                             categorySelector,
                         ])
                     )
+
+                    options.category = categorySelector.value
+
+                    categorySelector.addEventListener('change', e => {
+                        options.category = categorySelector.value
+                        console.log('category', options.value)
+                    })
                     break
                 default:
                     break
             }
-        })
+        }
+
+        exportFormatSelector.addEventListener('change', updateOptions())
+        updateOptions()
         
+        exportSubmitButton.addEventListener('click', () => {
+            let content = saveManager.export(
+                exportFormatSelector.value,
+                options,
+            )
+            downloadFile(
+                content,
+                `application/${exportFormatSelector.value}`,
+                `${options.category}.${exportFormatSelector.value}`,
+            )
+        })
     }
 
     updateExportFormat() {
@@ -627,12 +653,13 @@ export default class InventoryPage extends Page {
         importButton.addEventListener('click', () => {
             importDialog.showModal()
             importSubmitButton.disabled = false
+            friendCodeInput.disabled = false
             importMessage.innerText = ''
-
         })
 
-        importSubmitButton.addEventListener('click', () => {
+        const importFriendCode = () => {
             const friendCode = friendCodeInput.value
+            friendCodeInput.disabled = true
             importSubmitButton.disabled = true
             importMessage.innerText = ''
             saveManager.importFromCloud(friendCode)
@@ -645,8 +672,16 @@ export default class InventoryPage extends Page {
                 })
                 .finally(() => {
                     importSubmitButton.disabled = false
+                    friendCodeInput.disabled = false
+                    friendCodeInput.focus()
                 })
-        })
+        }
         
+        importSubmitButton.addEventListener('click', importFriendCode)
+        friendCodeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                importFriendCode()
+            }
+        })
     }
 }

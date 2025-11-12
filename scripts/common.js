@@ -168,7 +168,7 @@ export function linkHandler(e) {
     const link = e.target.closest('a')
     // console.log('link', link)
     if (link?.tagName == 'A') {
-        if (['_blank', '_parent', '_top'].includes(link.target)) {
+        if (['_blank', '_parent', '_top'].includes(link.target) || link.hasAttribute('download')) {
           return
         }
         const url = new URL(link.href)
@@ -239,3 +239,32 @@ function truncTime(time, value) {
 
 
 export const CATEGORIES = loadJSON('/assets/json/category-page-map.json')
+
+
+function createBlobURL(file, type) {
+  let blob = new Blob([file], {
+    type: type || 'application/*'
+  })
+
+  file = window.URL.createObjectURL(blob)
+
+  return file
+}
+
+/**
+ * 
+ * @param {string} content File content
+ * @param {mimeType} type File mime
+ * @param {string} filename Downloaded filename
+ */
+export function downloadFile(content, type, filename) {
+  let link = document.createElement('a')
+  const blob = createBlobURL(content, type)
+  link.href = blob
+  link.setAttribute('download', filename)
+  link.style.display = 'none'
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  window.URL.revokeObjectURL(blob)
+}

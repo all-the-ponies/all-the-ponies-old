@@ -1,4 +1,9 @@
+// import * as Papa from ''
+// import Papa from "./papaparse.js"
+
+import csv from "./csv.js"
 import api from "./api.js"
+import { toTitleCase } from "./common.js"
 
 export default class SaveManager {
     STRUCTURE = {
@@ -14,7 +19,7 @@ export default class SaveManager {
         lists: []
     }
     OBJECT_STRUCTURES = {
-        'ponies': {
+        ponies: {
             owned: false,
             stars: 0,
             minigame: '',
@@ -92,7 +97,7 @@ export default class SaveManager {
         return info != null && info.owned
     }
 
-    setOwned(id, owned = true) {
+    setOwned(id, owned = true, level = null) {
         const object = gameData.getObject(id)
 
         if (!owned) {
@@ -103,6 +108,8 @@ export default class SaveManager {
             if (object.category == 'ponies') {
                 if (object.max_level) {
                     info.stars = 5
+                } else if (level !== null) {
+                    info.stars = level
                 } else if (!('stars' in info)) {
                     info.stars = 0
                 }
@@ -122,6 +129,8 @@ export default class SaveManager {
         if ('detail' in saveData) {
             throw Error(saveData['detail'])
         }
+
+        console.log('saveData', saveData)
         
         this.reset()
 
@@ -129,7 +138,9 @@ export default class SaveManager {
 
         for (let pony of saveData.inventory.ponies) {
             this.setOwned(
-                pony.id
+                pony.id,
+                true,
+                pony.level,
             )
         }
 
@@ -138,5 +149,60 @@ export default class SaveManager {
                 shopId
             )
         }
+
+        console.log('new data', this.data)
+    }
+
+    export(format, options = {}) {
+        switch (format) {
+            case 'csv':
+                return this.exportCSV(options.category || 'ponies')
+        }
+    }
+
+    exportCSV(category) {
+        const HEADERS = {
+            ponies: ['ID', 'Name', 'Location', 'House', 'Stars', 'Pro', 'Changeling'],
+            houses: ['ID', 'Name', 'Location'],
+            shops: ['ID', 'Name', 'Location'],
+        }
+        
+        const table = [HEADERS[category]]
+
+        switch (category) {
+            case 'ponies':
+                for (let [id, info] of Object.entries(this.data.inventory.categories.ponies)) {
+                    if (!info.owned) {
+                        continue
+                    }
+                    const row = [id]
+                    const pony = gameData.getObject(id, 'ponies')
+                    row.push(app.translate(pony.name))
+                    row.push(toTitleCase(app.translate(pony.location)))
+                    const house = gameData.getObject(pony.house, 'houses')
+                    row.push(app.translate(house.name))
+                    row.push(info.stars)
+                    let pro = pony.pro
+                    if (pro === 'random') {
+                        row.push(pro)
+                    } else if (pro in gameData.gameData.group_quests.quests) {
+                        row.push(app.translate(gameData.gameData.group_quests.quests[pro].name))
+                    } else {
+                        row.push('')
+                    }
+
+                    if (pony.changeling.is_changeling) {
+                        let changeling = gameData.getObject(pony.changeling.id, 'ponies')
+                        row.push(app.translate(changeling.name))
+                    } else {
+                        row.push('')
+                    }
+
+                    table.push(row)
+                }
+                break
+        }
+
+        return csv.writeCSV(table)
     }
 }

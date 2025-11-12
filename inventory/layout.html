@@ -7,7 +7,7 @@
     <div id="stats"></div>
     <div class="import-export">
         <button id="import-button" class="button button-blue">Import</button>
-        <button style="display: none;" id="export-button" class="button button-blue">Export</button>
+        <button id="export-button" class="button button-blue">Export</button>
     </div>
 </div>
 
@@ -96,13 +96,13 @@
             <label>
                 Format
                 <select class="dropdown" name="format-selector" id="export-format-selector">
-                    <option value="json" selected>json</option>
-                    <option value="csv">csv</option>
+                    <option value="csv" selected>csv</option>
+                    <option value="json" disabled>json</option>
                 </select>
             </label>
             <div id="export-format-options"></div>
         </div>
-        <button class="button button-blue" type="submit" value="export">Export</button>
+        <button id="export-submit-button" class="button button-blue" type="submit" value="export">Export</button>
     </div>
 </dialog>
 
