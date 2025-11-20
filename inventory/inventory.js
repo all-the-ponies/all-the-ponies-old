@@ -275,23 +275,45 @@ export default class InventoryPage extends Page {
     showStats() {
         let stats = {
             ponies: 0,
+            transformable: 0,
             houses: saveManager.houses.length,
-            shops: 0,
+            shops: Object.keys(window.saveManager.data.inventory.categories.shops || {}).length,
         }
-        for (let category of Object.keys(stats)) {
-            if (category == 'houses') {
-                continue
+
+        const changelings = []
+        const changeling_alts = []
+        const ponies = []
+
+        for (let id of Object.keys(window.saveManager.data.inventory.categories.ponies)) {
+            let pony = gameData.getObject(id, 'ponies')
+            if (pony.changeling.id) {
+                if (changelings.includes(id)) {
+                    changeling_alts.push(id)
+                    continue
+                }
+
+                changelings.push(pony.changeling.id)
             }
-            let objects = window.saveManager.data.inventory.categories[category] || []
-            stats[category] = Object.keys(objects).length
+            
+            ponies.push(id)
         }
+
+        stats.ponies = ponies.length
+        stats.transformable = changeling_alts.length
+
         // console.log('stats', stats)
 
         let statsText = []
 
         for (let [stat, value] of Object.entries(stats)) {
             const span = document.createElement('span')
-            span.textContent = `${toTitleCase(LOC.translate(CATEGORIES[stat].string))}: ${value}`
+            let title = ''
+            if (CATEGORIES[stat]) {
+                title = toTitleCase(LOC.translate(CATEGORIES[stat].string))
+            } else {
+                title = toTitleCase(app.translate(stat.toLocaleUpperCase()))
+            }
+            span.textContent = `${title}: ${value}`
             statsText.push(span)
         }
 

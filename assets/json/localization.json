@@ -169,5 +169,8 @@
   },
   "TOTAL_PLAYTIME": {
     "english": "Total Playtime"
+  },
+  "TRANSFORMABLE": {
+    "english": "Transformable"
   }
 }
