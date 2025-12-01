@@ -9,10 +9,12 @@ def crop_image(pil_image: Image.Image):
     mask = np_array != blank_px
     mask = np.take(mask,axis=2,indices=3)
     coords = np.argwhere(mask)
-    x0, y0 = coords.min(axis=0)
-    x1, y1 = coords.max(axis=0) + 1
-    cropped_box = np_array[x0:x1, y0:y1]
-    pil_image = Image.fromarray(cropped_box, 'RGBA')
+    if 0 not in coords.shape:
+        x0, y0 = coords.min(axis=0)
+        x1, y1 = coords.max(axis=0) + 1
+        cropped_box = np_array[x0:x1, y0:y1]
+        pil_image = Image.fromarray(cropped_box, 'RGBA')
+    
     return pil_image
 
 if __name__ == "__main__":
