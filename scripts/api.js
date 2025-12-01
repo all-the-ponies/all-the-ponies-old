@@ -10,11 +10,19 @@ const LOCALHOST_API_DOMAIN = (() => {
 
 async function request(pathname, query = {}) {
     let url, response
-    url = new URL(isLocalhost() ? LOCALHOST_API_DOMAIN : API_DOMAIN)
-    url.pathname = pathname
-    for (let [key, value] of query) {
-        url.searchParams.set(key, value)
+
+    function createUrl(localhost = false) {
+        let url = new URL(localhost ? LOCALHOST_API_DOMAIN : API_DOMAIN)
+        url.pathname = pathname
+        for (let [key, value] of Object.entries(query)) {
+            url.searchParams.set(key, value)
+        }
+
+        return url
     }
+
+    url = createUrl(isLocalhost())
+
     
     if (isLocalhost()) {
         response = await fetch(String(url)).catch(err => console.warn(err) || null)
@@ -22,7 +30,7 @@ async function request(pathname, query = {}) {
             return response
         }
 
-        url.origin = API_DOMAIN
+        url = createUrl(false)
     }
 
     response = await fetch(String(url))
@@ -31,19 +39,13 @@ async function request(pathname, query = {}) {
 }
 
 async function getShop() {
-    const url = new URL(API_DOMAIN)
-    url.pathname = `/sales/shop/`
-
-    const result = (await fetch(url.toString())).json()
+    const result = (await request(`/sales/shop/`)).json()
 
     return result
 }
 
 async function getSave(friendCode) {
-    const url = new URL(API_DOMAIN)
-    url.pathname = `/save/${friendCode.toLowerCase().trim()}/inventory/`
-
-    const result = (await fetch(url.toString())).json()
+    const result = (await request(`/save/${friendCode.toLowerCase().trim()}/inventory/`)).json()
 
     return result
 }

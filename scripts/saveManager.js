@@ -8,7 +8,10 @@ import { toTitleCase } from "./common.js"
 export default class SaveManager {
     STRUCTURE = {
         version: 1,
-        total_playtime: 0,
+        player_info: {
+            join_date: '',
+            total_playtime: 0,
+        },
         inventory: {
             categories: {
                 ponies: {},
@@ -42,6 +45,15 @@ export default class SaveManager {
 
         if (localStorageData != null) {
             this.data = JSON.parse(localStorageData)
+        }
+
+        if ('total_playtime' in this.data) {
+            this.data.player_info = {
+                join_date: '',
+                total_playtime: this.data.total_playtime,
+            }
+            delete this.data.total_playtime
+            this.saveToLocalStorage()
         }
     }
 
@@ -132,7 +144,8 @@ export default class SaveManager {
         
         this.reset()
 
-        this.data.total_playtime = saveData.total_playtime
+        this.data.player_info.join_date = saveData.player_info.join_date
+        this.data.player_info.total_playtime = saveData.player_info.total_playtime
 
         for (let pony of saveData.inventory.ponies) {
             this.setOwned(

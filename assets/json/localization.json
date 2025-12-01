@@ -185,6 +185,9 @@
   "TOTAL_PLAYTIME": {
     "english": "Total Playtime"
   },
+  "JOIN_DATE": {
+    "english": "Join Date"
+  },
   "TRANSFORMABLE": {
     "english": "Transformable"
   }

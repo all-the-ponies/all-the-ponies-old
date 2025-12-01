@@ -317,9 +317,24 @@ export default class InventoryPage extends Page {
             statsText.push(span)
         }
 
-        if (saveManager.data.total_playtime) {
+        if (saveManager.data.player_info.total_playtime) {
             const span = document.createElement('span')
-            span.textContent = `${toTitleCase(LOC.translate('TOTAL_PLAYTIME'))}: ${formatTime(saveManager.data.total_playtime)}`
+            span.textContent = `${toTitleCase(LOC.translate('TOTAL_PLAYTIME'))}: ${formatTime(saveManager.data.player_info.total_playtime)}`
+            statsText.push(span)
+        }
+        
+        if (saveManager.data.player_info.join_date) {
+            const span = document.createElement('span')
+            const join_date = new Date(saveManager.data.player_info.join_date)
+            const join_date_str = new Intl.DateTimeFormat(
+                gameData.languages[app.language].code,
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                }
+            ).format(join_date)
+            span.textContent = `${toTitleCase(LOC.translate('JOIN_DATE'))}: ${join_date_str}`
             statsText.push(span)
         }
         
