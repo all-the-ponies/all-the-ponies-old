@@ -301,7 +301,16 @@ class ObjectCard extends HTMLElement {
         }
         const image = this.shadowRoot.getElementById('item-image')
         let imgUrl
-        imgUrl = this.gameObject.category == 'ponies' ? this.gameObject.image.full : this.gameObject.image
+
+        if (this.gameObject.category === 'ponies') {
+            imgUrl = this.gameObject.image.full
+        } else if (typeof this.gameObject.image === 'string') {
+            imgUrl = this.gameObject.image
+        } else {
+            imgUrl = this.gameObject.image.preview || this.gameObject.image.main
+        }
+
+        // imgUrl = this.gameObject.category == 'ponies' ? this.gameObject.image.full : this.gameObject.image
         image.src = imgUrl
 
         const pro = this.shadowRoot.getElementById('pro')

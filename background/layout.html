@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="/styles/object-profile.css">
+<link rel="stylesheet" href="/background/style.css">
+
+<div id="not-found">
+    <h1>House not found</h1>
+</div>
+<div id="object-profile">
+    <div>
+        <button class="to-search button-circle button-blue" title="back" aria-label="back">&#x2190;</button>
+        <h1 class="name">
+            <span id="object-profile-name">Pony Name</span>
+        </h1>
+        <img id="object-profile-preview" class="object-profile-image" src="/assets/images/ponies/full/Pony_Placeholder.png" alt="">
+        <img id="object-profile-image" class="object-profile-image" src="/assets/images/ponies/full/Pony_Placeholder.png" alt="">
+    </div>
+    <div class="object-profile-info">
+        <table class="infobox">
+            <tbody>
+                <tr>
+                    <td>Is default?</td>
+                    <td data-object-info="default">false</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<dialog id="options-dialog" class="dialog">
+    <h1 class="dialog-header">Options</h1>
+    <div class="dialog-body">
+        <form action="dialog">
+            <div class="form-options">
+                <!-- <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
+                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
+                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div>
+                    <div class="option"><input type="checkbox" name="" id=""><label for=""></label></div> -->
+            </div>
+            <div class="dialog-confirmation">
+                <button class="button button-red" type="submit" value="cancel" formmethod="dialog">Cancel</button>
+                <button class="button button-green" type="submit" value="ok" formmethod="dialog">OK</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<template id="pony-card">
+    <style>
+
+    </style>
+    <div class="pony-card">
+        <div class="pony-name">Pony name</div>
+        <div class="pony-card-body">
+            <img class="pony-image" src="/assets/images/ponies/shop/Pony_Placeholder.png" alt="">
+        </div>
+    </div>
+</template>

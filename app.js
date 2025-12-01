@@ -14,10 +14,15 @@ import ObjectListPage from "./scripts/components/object-list-page.js"
 import ObjectSearchPage from "./search/search.js"
 import InventoryPage from "./inventory/inventory.js"
 import GuesserPage from "./guesser/guesser.js"
+import BackgroundPage from "./background/background.js"
 
 import './scripts/components/game-object.js'
 
 import { linkHandler, LOC, setURL } from "./scripts/common.js"
+
+// import csv from "./scripts/csv.js"
+// 
+// window.csv = csv
 
 
 window.LOC = new Localization('/assets/json/localization.json')
@@ -135,11 +140,13 @@ class App {
         ponies: searchPage,
         houses: searchPage,
         shops: searchPage,
+        backgrounds: searchPage,
 
         pony: new PonyPage(),
         house: new HousePage(),
         shop: new ShopPage(),
         decor: new DecorPage(),
+        background: new BackgroundPage(),
 
         inventory: new InventoryPage(),
         
@@ -153,6 +160,7 @@ class App {
             ['/search/houses/', gameData.categories.houses.name],
             ['/search/shops/', gameData.categories.shops.name],
             ['/search/decor/', gameData.categories.decor.name],
+            ['/search/backgrounds/', gameData.categories.backgrounds.name],
             '~',
             ['/inventory/', LOC.dictionary.INVENTORY],
             '~',

@@ -14,5 +14,9 @@
     "decor": {
         "page": "decor",
         "string": "DECOR"
+    },
+    "backgrounds": {
+        "page": "background",
+        "string": "BACKGROUNDS"
     }
 }

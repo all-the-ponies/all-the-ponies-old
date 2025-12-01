@@ -128,6 +128,21 @@
     "thai": "ของตกแต่ง",
     "turkish": "Süsleme"
   },
+  "BACKGROUNDS": {
+    "arabic": "الخلفيات",
+    "chinese": "背景",
+    "english": "Backgrounds",
+    "french": "Fonds",
+    "german": "Hintergründe",
+    "italian": "Sfondi",
+    "japanese": "はいけい",
+    "korean": "배경",
+    "brazilian portuguese": "Planos de fundo",
+    "russian": "Задний план",
+    "spanish": "Fondos",
+    "thai": "ฉากหลัง",
+    "turkish": "Arka Planlar"
+  },
   "INVENTORY": {
     "english": "Inventory"
   },

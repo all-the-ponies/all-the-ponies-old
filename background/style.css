@@ -1,0 +1,5 @@
+.object-profile-image {
+    max-width: 20rem;
+    object-fit: contain;
+    object-position: center;
+}

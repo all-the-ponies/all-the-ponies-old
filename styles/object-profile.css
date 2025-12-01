@@ -28,7 +28,7 @@
     height: 1em;
 }
 
-#object-profile-image {
+.object-profile-image {
     max-width: 10rem;
     object-fit: contain;
     object-position: center;

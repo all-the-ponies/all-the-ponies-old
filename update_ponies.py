@@ -10,6 +10,7 @@ from typing import Any
 from typing import Iterable, Optional, Sequence, Union
 import urllib.parse
 from datetime import datetime, timedelta
+import re
 
 import charset_normalizer
 import requests
@@ -228,6 +229,46 @@ def get_encoding(file_path: str):
     return charset_normalizer.from_path(file_path).best().encoding
 
 
+def find_in_sprite(sprite: str, key: str):
+    with open(sprite, 'r', encoding = 'utf-8') as file:
+        sprite_content = file.read()
+    
+    console.print('pattern', fr'FRAME\s+"{re.escape(key)}"(\s*\/\/.*)?\s*{'{'}[\S\s]*FM\s+(0x\d+)')
+    match = re.search(
+        fr'FRAME\s+"{re.escape(key)}"(\s*\/\/.*)?\s*{'{'}[\S\s]*FM\s+(0x\d+)',
+        sprite_content,
+        re.MULTILINE,
+    )
+
+    if match is None:
+        console.print('could not find frame')
+        return
+    
+    module_id = match.group(2)
+
+    match = re.search(
+        fr'MD\s+{re.escape(module_id)}\s+MD_IMAGE\s+(?P<image>\d+)\s+(?P<x>\d+)\s+(?P<y>\d+)\s+(?P<w>\d+)\s+(?P<h>\d+)',
+        sprite_content,
+    )
+
+    if match is None:
+        console.print('could not find module')
+        return
+    
+    image_id = int(match.groupdict()['image'])
+
+    match = re.search(
+        rf'(?<=IMAGE 0x{image_id:04x} ").*(?=")',
+        sprite_content,
+    )
+
+    if match is None:
+        console.print('could not find image')
+        return
+    
+    return match.group()
+
+
 class GetGameData:
     def __init__(
         self,
@@ -311,6 +352,7 @@ class GetGameData:
         self.get_decorations()
         self.get_tokens()
         self.get_avatars()
+        self.get_backgrounds()
         self.get_items()
 
         self.get_group_quests()
@@ -354,6 +396,12 @@ class GetGameData:
         return self.content_version
 
     def save_image(self, input_path: str, output_path: str):
+        if os.path.exists(input_path + '.sprite'):
+            found_path = find_in_sprite(input_path + '.sprite', os.path.basename(input_path))
+            if found_path:
+                input_path = os.path.join(os.path.dirname(input_path), os.path.splitext(found_path)[0])
+
+        
         image = None
         if os.path.exists(input_path + '.png'):
             image = Image.open(input_path + '.png')
@@ -363,8 +411,15 @@ class GetGameData:
             console.print(f'could not find {os.path.basename(output_path)} image')
     
         if image is not None:
-            image = crop_image(image)
-            image.save(output_path)
+            try:
+                image = crop_image(image)
+                image.save(output_path)
+            except Exception as e:
+                e.add_note(f'image: {input_path}')
+                console.print_exception(
+                    show_locals = True
+                )
+                image.save(output_path)
 
     def get_ponies(self):
         self.categories.setdefault('ponies', {})
@@ -1108,6 +1163,60 @@ class GetGameData:
             
             avatar_info['is_default'] = avatar.get('Settings', {}).get('IsDefault', 0) == 1
             avatar_info['pony'] = avatar.get('Settings', {}).get('PonyStarsID', '')
+    
+    def get_backgrounds(self):
+        self.categories.setdefault('backgrounds', {})
+        self.categories['backgrounds']['name'] = translate(
+            'STR_STORE_BACKGROUNDS',
+            self.loc_files,
+            self.categories['backgrounds'].get('name', {}),
+        )
+
+        backgrounds: dict = self.categories['backgrounds'].setdefault('objects', {})
+
+        
+        os.makedirs(os.path.join(self.images_folder, 'backgrounds', 'main'), exist_ok = True)
+        os.makedirs(os.path.join(self.images_folder, 'backgrounds', 'preview'), exist_ok = True)
+
+        for index, background in track(
+            enumerate(self.gameobjectdata['PlayerCardBackground'].values()),
+            description = 'Getting backgrounds...',
+            total = len(self.gameobjectdata['PlayerCardBackground']),
+        ):
+            background_info: dict = backgrounds.setdefault(background.id, {})
+
+            background_info['index'] = index
+            background_info.setdefault('locked', False)
+            
+            background_info['name'] = translate(
+                background.get('Shop', {}).get('Label', background.id),
+                self.loc_files,
+                background_info.get('name', {}),
+                background_info.get('locked', False),
+            )
+
+            background_info['image'] = {}
+            
+            image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'backgrounds', 'preview', f'{background.id}.png')))
+            background_info['image']['preview'] = '/' + image_path
+        
+            image_name = os.path.splitext(background.get('Settings', {}).get('PictureActive', ''))[0]
+            image_source = os.path.join(self.game_folder, image_name)
+
+            if not self.no_images:
+                self.save_image(image_source, image_path)
+            
+            image_path = normalize_path(os.path.relpath(os.path.join(self.images_folder, 'backgrounds', 'main', f'{background.id}.png')))
+            background_info['image']['main'] = '/' + image_path
+        
+            image_name = os.path.splitext(background.get('Settings', {}).get('BackgroundImage', ''))[0]
+            image_source = os.path.join(self.game_folder, image_name)
+
+            if not self.no_images:
+                self.save_image(image_source, image_path)
+            
+            background_info['is_default'] = background.get('Settings', {}).get('IsDefault', 0) == 1
+            background_info['item_id'] = background.get('Settings', {}).get('ItemID', '')
 
 def main():
     argparser = argparse.ArgumentParser()
