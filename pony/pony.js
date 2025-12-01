@@ -26,6 +26,7 @@ export default class PonyPage extends ObjectProfilePage {
         document.querySelector('[data-object-info="House"]').href = house.category == 'houses' ? `/house/${house.id}/` : `/shop/${house.id}/`
         document.querySelector('[data-object-info="minigame-cooldown"]').textContent = formatTime(pony.minigame.cooldown)
         document.querySelector('[data-object-info="minigame-skip-cost"]').textContent = pony.minigame.skip_cost
+        document.querySelector('[data-object-info="Wiki"]').href = `https://mlp-game-wiki.no/index.php/${pony.wiki_path}`
 
         let starRewardsElement = this.objectProfileSection.querySelector('[data-object-info="star-rewards"]')
         let starRewardsBar = starRewardsElement.querySelector('.star-rewards-bar')
